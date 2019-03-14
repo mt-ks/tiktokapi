@@ -2,13 +2,32 @@
 
 class TiktokApi{
     public $api_url;
+
+
     public $cookies_dir;
     public $setUser;
-    public function __construct()
+
+    public function __construct($settings = [])
     {
         $this->api_url = 'https://api2.musical.ly/';
-        $this->cookies_dir = realpath('.').'/application/tiktok_cookies/';
+        $this->cookies_dir = __DIR__;
     }
+
+    /**
+     * SetCookieDir fonksiyonu ile giriş yapan kullanıcıların çerezlerini nerede tutacağınızı belirlersiniz
+     * Normal olarak __construct() metodunda __DIR__ olarak ayarlanmıştır.
+     * isteğe bağlı çerez dizini değiştirilebilir.
+     * !Önemli : login() fonksiyonundan önce kullanılmalıdır!
+    */
+
+    public function setCookieDir($dir){
+        $this->cookies_dir = $dir.'/';
+    }
+
+    /**
+     * İlk giriş isteği başarısız olur ve çıktılarda bir Captcha kodu gönderir. bu captcha kodu base64 ile şifrelenmiştir
+     * Resmi base64_decode($image_base)  ile kırıp php sayfasını header() metodu ile jpg'ye dönüştürmelisiniz.
+    */
 
     public function login($username,$password,$captcha = null)
     {
@@ -24,13 +43,17 @@ class TiktokApi{
         ));
     }
 
-
+    /**
+     *  Login işlemi tamamlandıktan sonra Cookie çağırma işlemidir.
+     *  Kullanıcı başarılı bir giriş yapmışsa direkt olarak SetUser() fonksiyonu çağırılabilir.
+     */
 
     public function SetUser($username)
     {
         return $this->setUser = $this->cookies_dir.$username.'-cookie.txt';
     }
-
+    
+    
     public function userInfo($user_id){
         return $this->request('aweme/v1/user/?user_id='.$user_id.'&'.$this->requestArray());
     }
@@ -203,57 +226,7 @@ class TiktokApi{
         }
         $implode = implode('&',$packet);
         return $implode;
-   }
-
-
-/*
- * https://api2-16-h2.musical.ly/aweme/v1/feed/?type=0&max_cursor=0&min_cursor=0&count=6&volume=0.4666666666666667&pull_type=0&req_from=enter_auto&gaid=74e5ef48-845d-4056-9ca6-59f556f48ec0&ad_user_agent=Dalvik%2F2.1.0+%28Linux%3B+U%3B+Android+5.1.1%3B+GT-N7100+Build%2FLMY48B%29&filter_warn=0&bid_ad_params&android_id=a0b7148b6e5edcb1&ad_personality_mode=1&ts=1549302090&js_sdk_version=&app_type=normal&os_api=22&device_type=GT-N7100&ssmix=a&manifest_version_code=2019011531&dpi=320&carrier_region=TR&region=TR&carrier_region_v2=286&app_name=musical_ly&version_name=9.9.0&ab_version=9.9.0&timezone_offset=7200&pass-route=1&pass-region=1&is_my_cn=0&fp=&ac=wifi&update_version_code=2019011531&channel=googleplay&_rticket=1549302090028&device_platform=android&iid=6650110848834635526&build_number=9.9.0&version_code=990&timezone_name=Europe%2FIstanbul&account_region=TR&openudid=a0b7148b6e5edcb1&device_id=6638361694995465733&sys_region=TR&app_language=tr&resolution=720*1280&os_version=5.1.1&device_brand=samsung&language=tr&aid=1233&mcc_mnc=28601&as=a1iosdfgh&cp=androide1
- * https://api2.musical.ly/api/ad/splash/musical/v14/?_unused=0&carrier=TURKCELL&mcc_mnc=28601&ad_area=720x1230&sdk_version=1.6.3&os_api=22&device_platform=android&os_version=5.1.1&display_density=720x1280&dpi=320&device_brand=samsung&device_type=GT-N7100&bh=245&display_dpi=320&density=2.0&ac=wifi&channel=googleplay&aid=1233&app_name=musical_ly&update_version_code=2019011531&version_code=990&version_name=9.9.0&manifest_version_code=2019011531&language=tr&iid=6650110848834635526&device_id=6638361694995465733&openudid=a0b7148b6e5edcb1&ab_version=9.9.0&user_period=0&user_mode=0&user_id=6653519491903684614&gaid=74e5ef48-845d-4056-9ca6-59f556f48ec0&android_id=a0b7148b6e5edcb1&ad_user_agent=Dalvik%2F2.1.0+%28Linux%3B+U%3B+Android+5.1.1%3B+GT-N7100+Build%2FLMY48B%29&retry_type=first_retry&app_language=tr&region=TR&sys_region=TR&carrier_region=TR&carrier_region_v2=286&build_number=9.9.0&timezone_offset=7200&timezone_name=Europe%2FIstanbul&is_my_cn=0&fp=&account_region=TR&pass-region=1&pass-route=1&ssmix=a&resolution=720*1280&_rticket=1549302067863&ts=1549298850&as=a125d6d5228a0c4c584155&cp=6ea2c95029885acae1OeWi&mas=01a07d4924a9975b3f3286abd8b865d611acac8c2c1cacc62cc60c
-    public function requestArray(){
-        $items = array(
-            'app_language' => 'tr',
-            'language'     => 'tr',
-            'region'       => 'tr',
-            'app_type'     => 'normal',
-            'sys_region'   => 'TR',
-            'carrier_region' => 'TR',
-            'carrier_region_v2' => '28601',
-            'is_my_cn'          => 0,
-            'fp' => "",
-            'build_number' =>  '9.1.0',
-            'account_region' => 'TR',
-            'iid' => '6620659482206930694',
-            'ac' => 'wifi',
-            'channel' => 'googleplay',
-            'aid' => '1233',
-            'app_name' => 'musical_ly',
-            'version_code' => '910',
-            'version_name' => '9.1.0',
-            'device_id' => '6594726280552547846',
-            'device_platform' => 'android',
-            'ssmix' => 'a',
-            'device_type' => 'Pixel',
-            'device_brand' => 'Nokia',
-            'os_api' => '23',
-            'os_version' => '7.1.2',
-            'openudid' => 'b307b864b574e818',
-            'manifest_version_code' => '2018111632',
-            'resolution' => '720*1280',
-            'dpi' => '420',
-            'update_version_code' => '2018111632',
-            '_rticket' => time() * 1000,
-            'timezone_offset' => 36000,
-            'ts' => time() * 1000,
-            'as' => 'a1qwert123',
-            'cp' => 'cbfhckdckkde1'
-        );
-        foreach ($items as $key => $item){
-            $packet[] = $key.'='.$item;
-        }
-        $implode = implode('&',$packet);
-        return $implode;
     }
-*/
 
 
 }
