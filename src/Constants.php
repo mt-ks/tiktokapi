@@ -12,4 +12,6 @@ class Constants
         'https://verification-va.musical.ly/'
     ];
 
+    public const MANIFEST_VERSION_CODE = 2019011531;
+
 }
