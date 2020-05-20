@@ -75,7 +75,52 @@ class TikTok
      */
     public function defaultParams() : array
     {
-        return [];
+        return [
+            'filter_warn'           => 0,
+            'bid_ad_params'         => '',
+            'android_id'            => $this->parent->settings->get('android_id'),
+            'ad_personality_mode'   => '1',
+            'ts'                    => time(),
+            'js_sdk_version'        => '',
+            'app_type'              => 'normal',
+            'os_api'                => '22',
+            'device_type'           => $this->parent->settings->get('device_type'),
+            'ssmix'                 => 'a',
+            'manifest_version_code' => '2019011531',
+            'dpi'                   => '320',
+            'carrier_region'        => 'US',
+            'carrier_region_v2'     => '286',
+            'app_name'              => 'musical_ly',
+            'version_name'          => '9.9.0',
+            'timezone_offset'       => '7200',
+            'pass-route'            => '1',
+            'pass-region'           => '1',
+            'is_my_cn'              => 0,
+            'fp'                    => '',
+            'ac'                    => 'wifi',
+            'update_version_code'   => '2019011531',
+            'channel'               => 'googleplay',
+            '_rticket'              => time(),
+            'device_platform'       => 'android',
+            'iid'                   => $this->parent->settings->get('iid'),
+            'build_number'          => '9.9.0',
+            'version_code'          => '990',
+            'timezone_name'         => 'Europe/Istanbul',
+            'account_region'        => 'V',
+            'openudid'              => $this->parent->settings->get('openudid'),
+            'device_id'             => $this->parent->settings->get('device_id'),
+            'sys_region'            => 'US',
+            'app_language'          => 'us',
+            'resolution'            => '720*1280',
+            'os_version'            => '5.1.1',
+            'device_brand'          => strtolower($this->parent->settings->get('device_brand')),
+            'language'              => 'us',
+            'aid'                   => '1233',
+            'mcc_mnc'               => '28601',
+            'as'                    => substr(md5(time()),10),
+            'cp'                    => substr(md5(time()),10),
+            'mas'                   => md5(sha1(time()))
+        ];
     }
 
     protected function getBase() : ?string

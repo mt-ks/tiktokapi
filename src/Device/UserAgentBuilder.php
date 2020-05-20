@@ -1,8 +1,10 @@
 <?php
 
 
-namespace TikTokAPI;
+namespace TikTokAPI\Device;
 
+
+use TikTokAPI\Constants;
 
 class UserAgentBuilder
 {
