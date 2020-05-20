@@ -1,6 +1,5 @@
 <?php
 
-
 namespace TikTokAPI;
 
 
@@ -44,7 +43,8 @@ class TikTok
             ->addPost('mix_mode', 1)
             ->addPost('multi_login', 1)
             ->addPost('ts',time())
-            ->getDecodedResponse(true);
+            ->execute()
+            ->getResponse();
     }
 
     public function setProxy($proxy) : self
@@ -91,6 +91,7 @@ class TikTok
     public function request($endpoint = '',$disableParams = false) : Request
     {
         $request = new Request($this->getBase().$endpoint);
+        $request->addCurlOptions(CURLOPT_USERAGENT,UserAgentBuilder::build());
         if ($this->_proxy):
             $request->setProxy($this->_proxy);
         endif;

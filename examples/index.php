@@ -1,8 +1,6 @@
 <?php
+require_once "../vendor/autoload.php";
 
-use TikTokAPI\TikTok;
-
-require "../vendor/autoload.php";
 
 $deviceInfo = [
   'iid'       => '',
@@ -10,4 +8,6 @@ $deviceInfo = [
   'device_id' => ''
 ];
 
-$t = new TikTok('username','password',$deviceInfo);
+
+$t = new \TikTokAPI\TikTok('username','password',$deviceInfo);
+print_r($t->login());
