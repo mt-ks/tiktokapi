@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * Class TiktokApi
+ */
 class TiktokApi{
     public $api_url;
 
