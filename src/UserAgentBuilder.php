@@ -10,7 +10,7 @@ class UserAgentBuilder
     /**
      * @return string
      */
-    public static function buildUA() : string
+    public static function build() : string
     {
         $randomPhone         = self::randomPhoneName();
         $androidSDKINT       = self::androidVersion();
