@@ -5,6 +5,7 @@ namespace TikTokAPI;
 
 use JsonException;
 use MClient\Request;
+use TikTokAPI\Device\UserAgentBuilder;
 
 class TikTok
 {
@@ -47,6 +48,10 @@ class TikTok
             ->getResponse();
     }
 
+    /**
+     * @param $proxy
+     * @return $this
+     */
     public function setProxy($proxy) : self
     {
         $this->_proxy = $proxy;
@@ -54,19 +59,13 @@ class TikTok
     }
 
 
+    /**
+     * @param int $base
+     * @return $this|string
+     */
     protected function setBase($base = 0) : string
     {
         $this->_base = $base;
-        return $this;
-    }
-
-    /**
-     * @param bool $bool
-     * @return TikTok
-     */
-    protected function disableParams($bool) : self
-    {
-        $this->_disableParams = $bool;
         return $this;
     }
 
@@ -78,13 +77,13 @@ class TikTok
         return [
             'filter_warn'           => 0,
             'bid_ad_params'         => '',
-            'android_id'            => $this->parent->settings->get('android_id'),
+            'android_id'            => '',
             'ad_personality_mode'   => '1',
             'ts'                    => time(),
             'js_sdk_version'        => '',
             'app_type'              => 'normal',
             'os_api'                => '22',
-            'device_type'           => $this->parent->settings->get('device_type'),
+            'device_type'           => '',
             'ssmix'                 => 'a',
             'manifest_version_code' => '2019011531',
             'dpi'                   => '320',
@@ -102,18 +101,18 @@ class TikTok
             'channel'               => 'googleplay',
             '_rticket'              => time(),
             'device_platform'       => 'android',
-            'iid'                   => $this->parent->settings->get('iid'),
+            'iid'                   => '',
             'build_number'          => '9.9.0',
             'version_code'          => '990',
             'timezone_name'         => 'Europe/Istanbul',
             'account_region'        => 'V',
-            'openudid'              => $this->parent->settings->get('openudid'),
-            'device_id'             => $this->parent->settings->get('device_id'),
+            'openudid'              => '',
+            'device_id'             => '',
             'sys_region'            => 'US',
             'app_language'          => 'us',
             'resolution'            => '720*1280',
             'os_version'            => '5.1.1',
-            'device_brand'          => strtolower($this->parent->settings->get('device_brand')),
+            'device_brand'          => '',
             'language'              => 'us',
             'aid'                   => '1233',
             'mcc_mnc'               => '28601',
