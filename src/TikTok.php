@@ -122,6 +122,7 @@ class TikTok
         ];
     }
 
+
     protected function getBase() : ?string
     {
         return Constants::API_URL[$this->_base] ?? null;
