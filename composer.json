@@ -5,7 +5,8 @@
     "require": {
         "mehmetbeyhz/mclient": "dev-master",
       "ext-curl": "*",
-      "ext-json": "*"
+      "ext-json": "*",
+      "ext-imagick": "*"
     },
     "license": "MIT",
     "authors": [
