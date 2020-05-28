@@ -6,6 +6,7 @@ namespace TikTokAPI\Http;
 
 use JsonException;
 use RuntimeException;
+use TikTokAPI\Encryption\CreateToken;
 
 class HttpClient
 {
@@ -27,12 +28,57 @@ class HttpClient
     public function __construct(Request $request)
     {
         $this->request = $request;
+        $curl = curl_init();
+        $options = [
+            CURLOPT_URL => $this->request->getBaseUrl().$this->request->getEndpoint().$this->request->getRequestParams(),
+            CURLOPT_RETURNTRANSFER => TRUE,
+            CURLOPT_FOLLOWLOCATION => TRUE,
+            CURLOPT_HEADER         => TRUE,
+            CURLOPT_SSL_VERIFYHOST => FALSE,
+            CURLOPT_SSL_VERIFYPEER => FALSE,
+            CURLOPT_ENCODING       => 'gzip, deflate'
+        ];
+        if ($this->request->hasPost()):
+            $options[CURLOPT_POST] = TRUE;
+            $options[CURLOPT_POSTFIELDS] = $this->request->getRequestPosts();
+            $this->request->addHeader('X-SS-STUB',strtoupper(md5($this->request->getRequestPosts())));
+        endif;
+        $this->request->addHeader('Accept-Encoding','gzip, deflate');
+        $this->request->addHeader('Content-Type','application/x-www-form-urlencoded; charset=UTF-8');
+        $this->request->addHeader('User-Agent',$this->request->parent->storage->getUser()->deviceUseragent());
+
+        $createToken = new CreateToken($this->request->getBaseUrl().$this->request->getEndpoint(),$this->request->getRequestParams(false),$this->request->getRequestPosts(),$this->request->getRequestHeaders(true));
+
+        $this->request->addHeader('X-Gorgon',$createToken->getXGorgon());
+        $this->request->addHeader('X-Khronos',$createToken->getXKhronos());
+
+
+
+        if ($this->request->hasHeaders()):
+            $options[CURLOPT_HTTPHEADER] = $this->request->getRequestHeaders();
+        endif;
+
+        if ($this->request->hasCurlOptions()):
+            foreach ($this->request->getRequestCurl() as $key => $value):
+                $options[$key] = $value;
+            endforeach;
+        endif;
+        curl_setopt_array($curl,$options);
+        $resp = curl_exec($curl);
+        $header_len = curl_getinfo($curl, CURLINFO_HEADER_SIZE);
+        $header = substr($resp, 0, $header_len);
+        $header = $this->getHeadersFromResponse($header);
+        $resp = (substr($resp, $header_len));
+        curl_close($curl);
+        print_r($options);
+        $this->requestResponse = $resp;
+        $this->requestResponseHeaders = $header;
     }
 
     /**
      * @return array
      */
-    public function getResponseHeaders() : array
+    public function getResponseHeaders(): array
     {
         return $this->requestResponseHeaders;
     }
@@ -52,7 +98,7 @@ class HttpClient
     /**
      * @return string
      */
-    public function getResponse() : string
+    public function getResponse(): string
     {
         return $this->requestResponse;
     }
@@ -65,8 +111,7 @@ class HttpClient
      */
     public function getDecodedResponse($assoc = true)
     {
-        if (!$this->requestResponse)
-        {
+        if (!$this->requestResponse) {
             throw new RuntimeException('No Response From Server');
         }
         return json_decode($this->requestResponse, $assoc, 512, JSON_THROW_ON_ERROR);
@@ -76,7 +121,7 @@ class HttpClient
      * @param $response
      * @return array
      */
-    protected function getHeadersFromResponse($response) : array
+    protected function getHeadersFromResponse($response): array
     {
         $headers = [];
 
@@ -90,8 +135,7 @@ class HttpClient
 
                 $headers[$key] = $value;
 
-                if (strtolower($key) === 'set-cookie')
-                {
+                if (strtolower($key) === 'set-cookie') {
                     $this->_cookies[] = $value;
                 }
 
@@ -109,5 +153,7 @@ class HttpClient
     {
         return (new HttpCookies($this->_cookies))->getCookie($key);
     }
+
+
 
 }

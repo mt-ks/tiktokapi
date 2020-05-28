@@ -122,7 +122,7 @@ class UserStorage
         return [
             'username'     => $this->username,
             'cookie'       => '',
-            'useragent'    => '',
+            'useragent'    => $this->deviceInfo['useragent'] ?? '',
             'openudid'     => $this->deviceInfo['openudid'] ?? '',
             'device_id'    => $this->deviceInfo['device_id'] ?? '',
             'iid'          => $this->deviceInfo['iid'] ?? '',

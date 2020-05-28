@@ -7,7 +7,7 @@ use TikTokAPI\TikTok;
 
 class Request
 {
-    protected TikTok $parent;
+    public TikTok $parent;
     protected string $endpoint;
     protected array $_post = [];
     protected array $_param = [];
@@ -29,9 +29,13 @@ class Request
         return $this;
     }
 
-    protected function getBaseUrl(): string
+    public function getBaseUrl(): string
     {
         return Constants::API_URL[$this->_base] ?? 'https://api2-19-h2.musical.ly/';
+    }
+
+    public function getEndpoint() : string {
+        return $this->endpoint;
     }
 
     public function addPost($key, $value): Request
@@ -67,7 +71,7 @@ class Request
         $this->disableDefaultParams = $status;
         return $this;
     }
-    public function isDisabledDefaultParams() : bool
+    protected function isDisabledDefaultParams() : bool
     {
         return $this->disableDefaultParams;
     }
@@ -99,7 +103,13 @@ class Request
 
     public function getRequestParams($withQM = true)
     {
-        return ($withQM) ? '?'.http_build_query($this->_param) : http_build_query($this->_param);
+        if ($this->disableDefaultParams !== true):
+            $this->initDefaultParams();
+        endif;
+        if ($this->hasParams()) {
+            return ($withQM) ? '?' . http_build_query($this->_param) : http_build_query($this->_param);
+        }
+        return null;
     }
 
     public function getRequestHeaders($asArray = false) : array
@@ -119,12 +129,71 @@ class Request
         return $this->_curl;
     }
 
+
+    public function initDefaultParams(): void
+    {
+
+        $timestamp = round(microtime(true) * 1000);
+        foreach ($this->defaultParamsList() as $k => $v)
+        {
+            $this->addParam($k,$v);
+        }
+    }
+
+    public function defaultParamsList(): array
+    {
+        return [
+            'filter_warn'           => 0,
+            'bid_ad_params'         => '',
+            'android_id'            => $this->parent->storage->getUser()->deviceOpenUDID(),
+            'ad_personality_mode'   => '1',
+            'ts'                    => time(),
+            'js_sdk_version'        => '',
+            'app_type'              => 'normal',
+            'os_api'                => '22',
+            'device_type'           => $this->parent->storage->getUser()->deviceType(),
+            'ssmix'                 => 'a',
+            'manifest_version_code' => '2019091803',
+            'dpi'                   => '320',
+            'carrier_region'        => 'US',
+            'carrier_region_v2'     => '286',
+            'app_name'              => 'musical_ly',
+            'version_name'          => '13.1.3',
+            'timezone_offset'       => '10800',
+            'pass-route'            => '1',
+            'pass-region'           => '1',
+            'is_my_cn'              => 0,
+            'fp'                    => '',
+            'ac'                    => 'wifi',
+            'update_version_code'   => '2019091803',
+            'channel'               => 'googleplay',
+            '_rticket'              => time(),
+            'device_platform'       => 'android',
+            'iid'                   => $this->parent->storage->getUser()->deviceInstallID(),
+            'build_number'          => '13.1.3',
+            'version_code'          => '990',
+            'timezone_name'         => 'Europe/Istanbul',
+            'account_region'        => 'V',
+            'openudid'              => $this->parent->storage->getUser()->deviceOpenUDID(),
+            'device_id'             => $this->parent->storage->getUser()->deviceId(),
+            'sys_region'            => 'US',
+            'app_language'          => 'us',
+            'resolution'            => '720*1280',
+            'os_version'            => '5.1.1',
+            'device_brand'          => strtolower($this->parent->storage->getUser()->deviceBrand()),
+            'language'              => 'us',
+            'aid'                   => '1233',
+            'mcc_mnc'               => '28601',
+
+        ];
+    }
+
     /**
      * @return HttpClient
      */
-    protected function execute(): HttpClient
+    public function execute(): HttpClient
     {
-        return (new HttpClient($this));
+        return new HttpClient($this);
     }
 
 
