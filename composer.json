@@ -4,8 +4,7 @@
     "type": "library",
     "require": {
       "ext-curl": "*",
-      "ext-json": "*",
-      "ext-imagick": "*"
+      "ext-json": "*"
     },
     "license": "MIT",
     "authors": [
