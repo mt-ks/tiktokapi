@@ -1,7 +1,7 @@
 <?php
 
 
-namespace TikTokAPI;
+namespace TikTokAPI\Encryption;
 
 
 class Encryption
@@ -21,4 +21,10 @@ class Encryption
 
         return $xor;
     }
+
+    public function xGorgonAndKhronos()
+    {
+
+    }
+
 }

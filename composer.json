@@ -3,7 +3,6 @@
     "description": "PHP Unofficial TikTok API",
     "type": "library",
     "require": {
-        "mehmetbeyhz/mclient": "dev-master",
       "ext-curl": "*",
       "ext-json": "*",
       "ext-imagick": "*"
