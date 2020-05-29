@@ -15,7 +15,6 @@ $token = new \TikTokAPI\Encryption\CreateToken($url,$query,$body,$headers);
 array_push($headers,'X-Gorgon: '.$token->getXGorgon(),'X-Khronos: '.$token->getXKhronos());
 //
 
-
 $c = curl_init();
 $o = [
     CURLOPT_URL => $url.$query,
