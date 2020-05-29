@@ -133,11 +133,54 @@ class Request
     public function initDefaultParams(): void
     {
 
+//        $timestamp = round(microtime(true) * 1000);
+//        foreach ($this->defaultParamsList() as $k => $v)
+//        {
+//            $this->addParam($k,$v);
+//        }
+
         $timestamp = round(microtime(true) * 1000);
-        foreach ($this->defaultParamsList() as $k => $v)
-        {
-            $this->addParam($k,$v);
-        }
+        $this
+            ->addParam('account_sdk_version', Constants::SDK_VERSION)
+            ->addParam('manifest_version_code', Constants::VERSION_CODE)
+            ->addParam('_rticket', $timestamp)
+            ->addParam('app_language', Constants::LANGUAGE)
+            ->addParam('app_type', Constants::APP_TYPE)
+            ->addParam('iid', $this->parent->storage->getUser()->deviceInstallID())
+            ->addParam('channel', Constants::CHANNEL)
+            ->addParam('device_type', Constants::DEVICE)
+            ->addParam('language', Constants::LANGUAGE)
+            ->addParam('locale', Constants::LANGUAGE)
+            ->addParam('resolution', Constants::RESOLUTION)
+            ->addParam('openudid', $this->parent->storage->getUser()->deviceOpenUDID())
+            ->addParam('update_version_code', Constants::VERSION_CODE)
+            ->addParam('ac2', 'wifi')
+            ->addParam('sys_region', Constants::REGION)
+            ->addParam('os_api', Constants::OS_API)
+            ->addParam('uoo', 1)
+            ->addParam('is_my_cn', 0)
+            ->addParam('timezone_name', 'GMT')
+            ->addParam('dpi', '560')
+            ->addParam('carrier_region', Constants::REGION)
+            ->addParam('ac', 'wifi')
+            ->addParam('device_id', $this->parent->storage->getUser()->deviceId())
+            ->addParam('pass-route', 1)
+            ->addParam('mcc_mnc', 310260)
+            ->addParam('os_version', Constants::OS_VERSION)
+            ->addParam('timezone_offset', 0)
+            ->addParam('version_code', Constants::BUILD_VERSION)
+            ->addParam('carrier_region_v2', 310)
+            ->addParam('app_name', Constants::APP_NAME)
+            ->addParam('ab_version', Constants::TIKTOK_VERSION)
+            ->addParam('version_name', Constants::TIKTOK_VERSION)
+            ->addParam('device_brand', ucfirst(Constants::PLATFORM))
+            ->addParam('ssmix', 'a')
+            ->addParam('pass-region', 1)
+            ->addParam('device_platform', Constants::PLATFORM)
+            ->addParam('build_number', Constants::TIKTOK_VERSION)
+            ->addParam('region', Constants::REGION)
+            ->addParam('aid', '1233')
+            ->addParam('ts', substr($timestamp, 0, -3));
     }
 
     public function defaultParamsList(): array
@@ -167,7 +210,7 @@ class Request
             'ac'                    => 'wifi',
             'update_version_code'   => '2019091803',
             'channel'               => 'googleplay',
-            '_rticket'              => time(),
+            '_rticket'              => time() * 1000,
             'device_platform'       => 'android',
             'iid'                   => $this->parent->storage->getUser()->deviceInstallID(),
             'build_number'          => '13.1.3',

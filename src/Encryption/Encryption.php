@@ -52,7 +52,7 @@ class Encryption
         return implode(':', str_split(str_pad(base_convert(mt_rand(0, 0xffffff), 10, 16) . base_convert(mt_rand(0, 0xffffff), 10, 16), 12), 2));
     }
 
-    public static function deviceRegisterData()
+    public static function deviceRegisterData(): array
     {
         $device   = UserAgentBuilder::devices();
         $randDevice = $device[array_rand($device)];
@@ -62,14 +62,14 @@ class Encryption
             'magic_tag' => 'ss_app_log',
             'header'    => [
                 'display_name'          => 'TikTok',
-                'update_version_code'   => "2019092901",
-                'manifest_version_code' => "2019092901",
+                'update_version_code'   => "2019091803",
+                'manifest_version_code' => "2019091803",
                 'aid'                   => "1233",
                 'channel'               => 'googleplay',
                 'appkey'                => '5559e28267e58eb4c1000012',
                 'package'               => 'com.zhiliaoapp.musically',
                 'app_version'           => '13.1.3',
-                'version_code'          => '2019092901',
+                'version_code'          => '2019091803',
                 'sdk_version'           => '2.5.5.8',
                 'os'                    => 'Android',
                 'os_version'            => '7.1.2',

@@ -36,6 +36,8 @@ class HttpClient
             CURLOPT_HEADER         => TRUE,
             CURLOPT_SSL_VERIFYHOST => FALSE,
             CURLOPT_SSL_VERIFYPEER => FALSE,
+//            CURLOPT_COOKIEFILE     => $this->request->parent->storage->getUser()->getUsername().'-cookies.dat',
+//            CURLOPT_COOKIEJAR      => $this->request->parent->storage->getUser()->getUsername().'-cookies.dat',
             CURLOPT_ENCODING       => 'gzip, deflate'
         ];
         if ($this->request->hasPost()):

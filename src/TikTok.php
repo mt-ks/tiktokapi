@@ -6,6 +6,7 @@ namespace TikTokAPI;
 use Exception;
 use TikTokAPI\Encryption\Encryption;
 use TikTokAPI\Http\Request;
+use TikTokAPI\Models\RegisterDeviceModel;
 use TikTokAPI\Storage\UserStorage;
 
 class TikTok
@@ -36,7 +37,9 @@ class TikTok
         return $this->request('passport/user/login/')
             ->addPost('username',Encryption::xorEncrypt($this->username))
             ->addPost('password',Encryption::xorEncrypt($this->password))
-            ->addPost('account_sdk_source','app')
+            ->addPost('mix_mode','')
+            ->addPost('mobile','')
+            ->addPost('captcha','')
             ->addPost('mix_mode',1)
             ->addPost('multi_login',1)
             ->execute()
@@ -50,7 +53,7 @@ class TikTok
     public function registerDevice()
     {
         $binary = Encryption::deviceRegisterData();
-        return $this->request('service/2/device_register/')
+        $register = $this->request('service/2/device_register/')
             ->setBaseUrl(2)
             ->addParam('ac','wifi')
             ->addParam('channel','googleplay')
@@ -102,6 +105,8 @@ class TikTok
             ])
             ->execute()
             ->getResponse();
+
+        return new RegisterDeviceModel($register,$binary);
     }
 
     /**
