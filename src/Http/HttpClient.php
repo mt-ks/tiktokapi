@@ -35,6 +35,7 @@ class HttpClient
             CURLOPT_FOLLOWLOCATION => TRUE,
             CURLOPT_HEADER         => TRUE,
             CURLOPT_SSL_VERIFYHOST => FALSE,
+            CURLOPT_PROXY => 'webgrambxf82a:f413c712d12e30a0b413@ianaliz.com:5654',
             CURLOPT_SSL_VERIFYPEER => FALSE,
 //            CURLOPT_COOKIEFILE     => $this->request->parent->storage->getUser()->getUsername().'-cookies.dat',
 //            CURLOPT_COOKIEJAR      => $this->request->parent->storage->getUser()->getUsername().'-cookies.dat',
@@ -45,11 +46,9 @@ class HttpClient
             $options[CURLOPT_POSTFIELDS] = $this->request->getRequestPosts();
             $this->request->addHeader('X-SS-STUB',strtoupper(md5($this->request->getRequestPosts())));
         endif;
-        $this->request->addHeader('Accept-Encoding','gzip, deflate');
-        $this->request->addHeader('Content-Type','application/x-www-form-urlencoded; charset=UTF-8');
         $this->request->addHeader('User-Agent',$this->request->parent->storage->getUser()->deviceUseragent());
 
-        $createToken = new CreateToken($this->request->getBaseUrl().$this->request->getEndpoint(),$this->request->getRequestParams(false),$this->request->getRequestPosts(),$this->request->getRequestHeaders(true));
+        $createToken = new CreateToken($this->request->getBaseUrl().$this->request->getEndpoint(),$this->request->getRequestParams(true),$this->request->getRequestPosts(),$this->request->getRequestHeaders(true));
 
         $this->request->addHeader('X-Gorgon',$createToken->getXGorgon());
         $this->request->addHeader('X-Khronos',$createToken->getXKhronos());
