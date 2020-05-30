@@ -50,19 +50,53 @@ $deviceInfo = [
 ];
 
 try {
-    $t = new \TikTokAPI\TikTok('35denizkaraca35', '9BIGMKhUCc2u', $deviceInfo);
-   // $register = $t->registerDevice();
-//
-//    $t->storage->set('device_type',$register->getDeviceType())
-//        ->set('device_brand',$register->getDeviceBrand())
-//        ->set('openudid',$register->getOpenUDID())
-//        ->set('device_id',$register->getDeviceId())
-//        ->set('useragent',$register->getUseragent())
-//        ->set('iid',$register->getInstallId());
+    $username = 'buketamkoparancik'.rand(9,999999);
+    $t = new \TikTokAPI\TikTok($username, 'qweqwe11', $deviceInfo);
+    $t->setProxy('webgrambx418b:fcf613af997a11ad11d1@ianaliz.com:20685');
 
-    print_r($t->login());
+    $register = $t->registerDevice();
 
-    //print_r($t->login());
+    $t->storage->set('device_type',$register->getDeviceType())
+        ->set('device_brand',$register->getDeviceBrand())
+        ->set('openudid',$register->getOpenUDID())
+        ->set('device_id',$register->getDeviceId())
+        ->set('useragent',$register->getUseragent())
+        ->set('iid',$register->getInstallId());
+
+    $yr = $t->registerVerifyAge();
+    print_r($yr);
+
+    $r = $t->checkEmailRegistered($username.'@smm.tc');
+    print_r($r);
+    if (isset($r['data']['error_code']) && (int)$r['data']['error_code'] === 1105)
+    {
+        $captcha = $t->getCaptcha();
+        if (isset($captcha['ret']) && (int)$captcha['ret'] === 200)
+        {
+            $solve = $t->solveCaptcha($captcha['data']['id'],$captcha['data']['question']['url1'],$captcha['data']['question']['url2'],45);
+            if (isset($solve['ret']) && (int)$solve['ret'] === 200)
+            {
+                $r = $t->checkEmailRegistered($username.'@gmail.com');
+                print_r($r);
+            }
+        }
+    }
+    sleep(5);
+    $r = $t->register($username.'@gmail.com','qweqwe11');
+    print_r($r);
+
+    $captcha = $t->getCaptcha();
+    print_r($captcha);
+    if (isset($captcha['ret']) && (int)$captcha['ret'] === 200)
+    {
+        $solve = $t->solveCaptcha($captcha['data']['id'],$captcha['data']['question']['url1'],$captcha['data']['question']['url2'],45);
+        if (isset($solve['ret']) && (int)$solve['ret'] === 200)
+        {
+            $r = $t->register($username.'@gmail.com','qweqwe11');
+            print_r($r);
+        }
+    }
+
 } catch (Exception $e) {
     print_r($e->getMessage());
     print_r($e->getFile());

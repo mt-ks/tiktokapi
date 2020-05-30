@@ -31,27 +31,40 @@ class HttpClient
         $curl = curl_init();
         $options = [
             CURLOPT_URL => $this->request->getBaseUrl().$this->request->getEndpoint().$this->request->getRequestParams(),
-            CURLOPT_RETURNTRANSFER => TRUE,
-            CURLOPT_FOLLOWLOCATION => TRUE,
-            CURLOPT_HEADER         => TRUE,
-            CURLOPT_SSL_VERIFYHOST => FALSE,
-            CURLOPT_PROXY => 'webgrambxf82a:f413c712d12e30a0b413@ianaliz.com:5654',
-            CURLOPT_SSL_VERIFYPEER => FALSE,
-//            CURLOPT_COOKIEFILE     => $this->request->parent->storage->getUser()->getUsername().'-cookies.dat',
-//            CURLOPT_COOKIEJAR      => $this->request->parent->storage->getUser()->getUsername().'-cookies.dat',
-            CURLOPT_ENCODING       => 'gzip, deflate'
+            CURLOPT_RETURNTRANSFER  => TRUE,
+            CURLOPT_FOLLOWLOCATION  => TRUE,
+            CURLOPT_HEADER          => TRUE,
+            CURLOPT_SSL_VERIFYHOST  => FALSE,
+            CURLOPT_SSL_VERIFYPEER  => FALSE,
+            CURLOPT_ENCODING        => 'gzip, deflate'
         ];
+
+        if ($this->request->parent->getProxy() !== null):
+            $options[CURLOPT_PROXY] = $this->request->parent->getProxy();
+        endif;
+
+        if ($this->request->getNeedsCookie() === true):
+            $options[CURLOPT_COOKIEFILE]  = $this->request->parent->storage->getCookiePath();
+            $options[CURLOPT_COOKIEJAR]   = $this->request->parent->storage->getCookiePath();
+        endif;
+
         if ($this->request->hasPost()):
             $options[CURLOPT_POST] = TRUE;
             $options[CURLOPT_POSTFIELDS] = $this->request->getRequestPosts();
             $this->request->addHeader('X-SS-STUB',strtoupper(md5($this->request->getRequestPosts())));
+        elseif ($this->request->getPostPayload() !== null):
+            $options[CURLOPT_POST] = TRUE;
+            $options[CURLOPT_POSTFIELDS] = $this->request->getPostPayload();
         endif;
+
         $this->request->addHeader('User-Agent',$this->request->parent->storage->getUser()->deviceUseragent());
 
-        $createToken = new CreateToken($this->request->getBaseUrl().$this->request->getEndpoint(),$this->request->getRequestParams(true),$this->request->getRequestPosts(),$this->request->getRequestHeaders(true));
 
-        $this->request->addHeader('X-Gorgon',$createToken->getXGorgon());
-        $this->request->addHeader('X-Khronos',$createToken->getXKhronos());
+        if ($this->request->isDisabledTokens() === false):
+            $createToken = new CreateToken($this->request->getBaseUrl().$this->request->getEndpoint(),$this->request->getRequestParams(true),$this->request->getRequestPosts(),$this->request->getRequestHeaders(true));
+            $this->request->addHeader('X-Gorgon',$createToken->getXGorgon());
+            $this->request->addHeader('X-Khronos',$createToken->getXKhronos());
+        endif;
 
 
 

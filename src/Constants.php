@@ -10,7 +10,8 @@ class Constants
     public const API_URL = [
         'https://api2.musical.ly/',
         'https://verification-va.musical.ly/',
-        'https://applog.musical.ly/'
+        'https://applog.musical.ly/',
+        'https://api2-19-h2.musical.ly/'
     ];
 
     public const USER_AGENT = 'okhttp/3.10.0.1';

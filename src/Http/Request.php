@@ -15,6 +15,9 @@ class Request
     protected array $_curl = [];
     protected bool  $disableDefaultParams = false;
     protected int $_base = 0;
+    protected bool $needsCookie = true;
+    protected bool $isDisabledTokens = false;
+    protected ?string $postPayload = null;
 
     public function __construct($endpoint, TikTok $parent)
     {
@@ -71,6 +74,20 @@ class Request
         $this->disableDefaultParams = $status;
         return $this;
     }
+
+
+
+    public function setNeedsCookie(bool $bool): Request
+    {
+        $this->needsCookie = $bool;
+        return $this;
+    }
+
+    public function getNeedsCookie() : bool
+    {
+        return $this->needsCookie;
+    }
+
     protected function isDisabledDefaultParams() : bool
     {
         return $this->disableDefaultParams;
@@ -183,52 +200,24 @@ class Request
             ->addParam('ts', substr($timestamp, 0, -3));
     }
 
-    public function defaultParamsList(): array
+    public function disableTokens(bool $isDisabled) : Request
     {
-        return [
-            'filter_warn'           => 0,
-            'bid_ad_params'         => '',
-            'android_id'            => $this->parent->storage->getUser()->deviceOpenUDID(),
-            'ad_personality_mode'   => '1',
-            'ts'                    => time(),
-            'js_sdk_version'        => '',
-            'app_type'              => 'normal',
-            'os_api'                => '22',
-            'device_type'           => $this->parent->storage->getUser()->deviceType(),
-            'ssmix'                 => 'a',
-            'manifest_version_code' => '2019091803',
-            'dpi'                   => '320',
-            'carrier_region'        => 'US',
-            'carrier_region_v2'     => '286',
-            'app_name'              => 'musical_ly',
-            'version_name'          => '13.1.3',
-            'timezone_offset'       => '10800',
-            'pass-route'            => '1',
-            'pass-region'           => '1',
-            'is_my_cn'              => 0,
-            'fp'                    => '',
-            'ac'                    => 'wifi',
-            'update_version_code'   => '2019091803',
-            'channel'               => 'googleplay',
-            '_rticket'              => time() * 1000,
-            'device_platform'       => 'android',
-            'iid'                   => $this->parent->storage->getUser()->deviceInstallID(),
-            'build_number'          => '13.1.3',
-            'version_code'          => '990',
-            'timezone_name'         => 'Europe/Istanbul',
-            'account_region'        => 'V',
-            'openudid'              => $this->parent->storage->getUser()->deviceOpenUDID(),
-            'device_id'             => $this->parent->storage->getUser()->deviceId(),
-            'sys_region'            => 'US',
-            'app_language'          => 'us',
-            'resolution'            => '720*1280',
-            'os_version'            => '5.1.1',
-            'device_brand'          => strtolower($this->parent->storage->getUser()->deviceBrand()),
-            'language'              => 'us',
-            'aid'                   => '1233',
-            'mcc_mnc'               => '28601',
+        $this->isDisabledTokens = $isDisabled;
+        return $this;
+    }
 
-        ];
+    public function isDisabledTokens() : bool
+    {
+        return $this->isDisabledTokens;
+    }
+
+    public function setPostPayload($payload) : Request {
+        $this->postPayload = $payload;
+        return $this;
+    }
+
+    public function getPostPayload() : ?string {
+        return $this->postPayload;
     }
 
     /**

@@ -106,10 +106,19 @@ class UserStorage
     protected function initConfig($config) : void
     {
 
-        if (isset($config['folder']) && !is_dir($config['folder']) && !mkdir($concurrentDirectory = $concurrentDirectory = $config['folder'], 0777, true) && !is_dir($concurrentDirectory)) {
+        if (isset($config['folder']) && !is_dir($config['folder'] . $this->username) && !mkdir($concurrentDirectory = $concurrentDirectory = $concurrentDirectory = $config['folder'].'/'. $this->username, 0777, true) && !is_dir($concurrentDirectory))
+        {
             throw new RuntimeException(sprintf('Directory "%s" was not created', $concurrentDirectory));
         }
-        if (isset($config['folder'])){ $this->defaultPath = $config['folder']; }
+
+        $this->defaultPath = $config['folder'].'/'.$this->username;
+    }
+
+
+    public function getCookiePath() : string
+    {
+        return ($this->defaultPath !== '') ? rtrim($this->defaultPath,'/').'/'.$this->username.'-cookies.dat' : $this->username.'-cookies.dat';
+
     }
 
     protected function getSessionPath() : string

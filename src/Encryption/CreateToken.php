@@ -10,7 +10,7 @@ use MClient\Request;
 class CreateToken
 {
     private $request;
-    private const SERVER_ADDRESS = 'http://192.168.0.40:4000/?tiktok_access_token=1212554612922_111213141516997755mbyMBY';
+    private const SERVER_ADDRESS = 'http://192.168.0.41:4000/?tiktok_access_token=1212554612922_111213141516997755mbyMBY';
 
 
     /**
