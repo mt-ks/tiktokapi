@@ -56,6 +56,7 @@ try {
 
     $register = $t->registerDevice();
 
+
     $t->storage->set('device_type',$register->getDeviceType())
         ->set('device_brand',$register->getDeviceBrand())
         ->set('openudid',$register->getOpenUDID())

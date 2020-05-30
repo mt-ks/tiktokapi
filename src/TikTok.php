@@ -131,6 +131,7 @@ class TikTok
             ->getDecodedResponse();
     }
 
+
     public function register($email, $password)
     {
         $request = $this->request('passport/email/register/v2/')
