@@ -6,7 +6,13 @@ use Exception;
 
 class RegisterDeviceModel
 {
+    /**
+     * @var array|mixed
+     */
     protected array $data;
+    /**
+     * @var array
+     */
     protected array $registerData = [];
 
     /**
@@ -21,36 +27,57 @@ class RegisterDeviceModel
         $this->registerData = $registerData;
     }
 
+    /**
+     * @return mixed|null
+     */
     public function getInstallId()
     {
         return $this->data['install_id_str'] ?? null;
     }
 
+    /**
+     * @return mixed|null
+     */
     public function getDeviceId()
     {
         return $this->data['device_id_str'] ?? null;
     }
 
+    /**
+     * @return string|null
+     */
     public function getOpenUDID() : ?string
     {
         return $this->registerData['data']['header']['openudid'] ?? null;
     }
 
+    /**
+     * @return mixed|null
+     */
     public function getServerTime()
     {
         return $this->data['server_time'] ?? null;
     }
 
+    /**
+     * @return mixed|null
+     */
     public function getUseragent()
     {
         return $this->registerData['ua'] ?? null;
     }
 
+    /**
+     * @return mixed|null
+     */
     public function getDeviceType()
     {
         return $this->registerData['data']['header']['device_model'] ?? null;
     }
 
+    /**
+     * @return mixed|null
+     */
     public function getDeviceBrand()
     {
         return $this->registerData['data']['header']['device_brand'] ?? null;
