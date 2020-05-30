@@ -3,7 +3,6 @@
 
 namespace TikTokAPI\Storage;
 
-
 use Exception;
 use RuntimeException;
 use TikTokAPI\Device\Device;
@@ -24,7 +23,7 @@ class UserStorage
      * @param array $config
      * @throws Exception
      */
-    public function __construct($username,$deviceInfo = [],$config = [])
+    public function __construct($username, $deviceInfo = [], $config = [])
     {
         $this->username = $username;
         $this->deviceInfo = $deviceInfo;
@@ -38,7 +37,7 @@ class UserStorage
      */
     protected function checkUserFile() : void
     {
-        if (!file_exists($this->getSessionPath())){
+        if (!file_exists($this->getSessionPath())) {
             fopen($this->getSessionPath(), 'wb');
             fwrite(fopen($this->getSessionPath(), 'wb+'), json_encode($this->defaultSettingsContent(), JSON_THROW_ON_ERROR));
         }
@@ -57,9 +56,8 @@ class UserStorage
     {
         $getContent = $this->getFileContent();
         $decode     = json_decode(stream_get_contents($getContent), true, 512, JSON_THROW_ON_ERROR);
-        foreach ($decode as $key => $value)
-        {
-            $this->set($key,$value);
+        foreach ($decode as $key => $value) {
+            $this->set($key, $value);
         }
     }
 
@@ -69,7 +67,7 @@ class UserStorage
      * @return UserStorage
      * @throws Exception
      */
-    public function set($key,$value) : self
+    public function set($key, $value) : self
     {
         $this->userConfig[$key] = $value;
         $this->save();
@@ -81,11 +79,11 @@ class UserStorage
      */
     protected function save(): void
     {
-        fwrite(fopen($this->getSessionPath(),"wb+"), json_encode($this->userConfig, JSON_THROW_ON_ERROR));
+        fwrite(fopen($this->getSessionPath(), "wb+"), json_encode($this->userConfig, JSON_THROW_ON_ERROR));
     }
 
 
-    public function get($key,$default) : ?string
+    public function get($key, $default) : ?string
     {
         return $this->userConfig[$key] ?? $default;
     }
@@ -105,9 +103,7 @@ class UserStorage
      */
     protected function initConfig($config) : void
     {
-
-        if (isset($config['folder']) && !is_dir($config['folder'] . $this->username) && !mkdir($concurrentDirectory = $concurrentDirectory = $concurrentDirectory = $config['folder'].'/'. $this->username, 0777, true) && !is_dir($concurrentDirectory))
-        {
+        if (isset($config['folder']) && !is_dir($config['folder'] . $this->username) && !mkdir($concurrentDirectory = $concurrentDirectory = $concurrentDirectory = $config['folder'].'/'. $this->username, 0777, true) && !is_dir($concurrentDirectory)) {
             throw new RuntimeException(sprintf('Directory "%s" was not created', $concurrentDirectory));
         }
 
@@ -117,13 +113,12 @@ class UserStorage
 
     public function getCookiePath() : string
     {
-        return ($this->defaultPath !== '') ? rtrim($this->defaultPath,'/').'/'.$this->username.'-cookies.dat' : $this->username.'-cookies.dat';
-
+        return ($this->defaultPath !== '') ? rtrim($this->defaultPath, '/').'/'.$this->username.'-cookies.dat' : $this->username.'-cookies.dat';
     }
 
     protected function getSessionPath() : string
     {
-        return ($this->defaultPath !== '') ? rtrim($this->defaultPath,'/').'/'.$this->username.'.json' : $this->username.'.json';
+        return ($this->defaultPath !== '') ? rtrim($this->defaultPath, '/').'/'.$this->username.'.json' : $this->username.'.json';
     }
 
     protected function defaultSettingsContent(): array
@@ -139,5 +134,4 @@ class UserStorage
             'device_brand' => $this->deviceInfo['device_brand'] ?? '',
         ];
     }
-
 }

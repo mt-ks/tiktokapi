@@ -3,7 +3,6 @@
 
 namespace TikTokAPI\Storage;
 
-
 use Exception;
 
 class UserModel
@@ -83,6 +82,4 @@ class UserModel
     {
         return $this->data['device_type'] ?? null;
     }
-
-
 }

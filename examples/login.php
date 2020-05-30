@@ -2,9 +2,9 @@
 require '../vendor/autoload.php';
 
 try{
-    $username = '';
-    $password = '';
-    $proxy    = '';
+    $username = '35denizkaraca35';
+    $password = '9BIGMKhUCc2u';
+    $proxy    = 'webgrambx1acb:459c0f2131011f12c1ea@ianaliz.com:3211';
 
     $t = new \TikTokAPI\TikTok($username, $password);
     $t->setProxy($proxy);

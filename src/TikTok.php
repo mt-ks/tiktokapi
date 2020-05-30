@@ -2,21 +2,39 @@
 
 namespace TikTokAPI;
 
-
 use Exception;
+use ImagickException;
+use JsonException;
 use TikTokAPI\Encryption\Encryption;
 use TikTokAPI\Http\Request;
 use TikTokAPI\Models\RegisterDeviceModel;
 use TikTokAPI\Storage\UserStorage;
-use TikTokAPI\CaptchaSolver;
 
 class TikTok
 {
+    /**
+     * @var string
+     */
     protected string $username;
+    /**
+     * @var string
+     */
     protected string $password;
+    /**
+     * @var array
+     */
     protected array $deviceInfo;
+    /**
+     * @var array
+     */
     protected array $config;
+    /**
+     * @var string|null
+     */
     protected ?string $proxy = null;
+    /**
+     * @var UserStorage
+     */
     public UserStorage $storage;
 
     /**
@@ -27,21 +45,20 @@ class TikTok
      * @param array $config
      * @throws Exception
      */
-    public function __construct($username,$password,$deviceInfo = [],$config = ['folder' => __DIR__.'/sessions/'])
+    public function __construct($username, $password, $deviceInfo = [], $config = ['folder' => __DIR__.'/sessions/'])
     {
         $this->username = $username;
         $this->password = $password;
-        $this->storage = new UserStorage($this->username,$deviceInfo,$config);
+        $this->storage = new UserStorage($this->username, $deviceInfo, $config);
         $this->checkDeviceStatus();
     }
 
     /**
      * @throws Exception
      */
-    public function checkDeviceStatus()
+    public function checkDeviceStatus(): void
     {
-        if (!$this->storage->getUser()->deviceInstallID())
-        {
+        if (!$this->storage->getUser()->deviceInstallID()) {
             $this->changeDeviceInfo();
         }
     }
@@ -52,21 +69,29 @@ class TikTok
     public function changeDeviceInfo(): void
     {
         $registerNewDevice = $this->registerDevice();
-        $this->storage->set('device_type',$registerNewDevice->getDeviceType())
-            ->set('device_brand',$registerNewDevice->getDeviceBrand())
-            ->set('openudid',$registerNewDevice->getOpenUDID())
-            ->set('device_id',$registerNewDevice->getDeviceId())
-            ->set('useragent',$registerNewDevice->getUseragent())
-            ->set('iid',$registerNewDevice->getInstallId());
+        $this->storage->set('device_type', $registerNewDevice->getDeviceType())
+            ->set('device_brand', $registerNewDevice->getDeviceBrand())
+            ->set('openudid', $registerNewDevice->getOpenUDID())
+            ->set('device_id', $registerNewDevice->getDeviceId())
+            ->set('useragent', $registerNewDevice->getUseragent())
+            ->set('iid', $registerNewDevice->getInstallId());
     }
 
+    /**
+     * @param string $proxy
+     * @return $this
+     */
     public function setProxy(string $proxy) : TikTok
     {
         $this->proxy = $proxy;
         return $this;
     }
 
-    public function getProxy() : ?string {
+    /**
+     * @return string|null
+     */
+    public function getProxy() : ?string
+    {
         return $this->proxy;
     }
 
@@ -77,13 +102,13 @@ class TikTok
     public function login()
     {
         return $this->request('passport/user/login/')
-            ->addPost('username',Encryption::xorEncrypt($this->username))
-            ->addPost('password',Encryption::xorEncrypt($this->password))
-            ->addPost('mix_mode','')
-            ->addPost('mobile','')
-            ->addPost('captcha','')
-            ->addPost('mix_mode',1)
-            ->addPost('multi_login',1)
+            ->addPost('username', Encryption::xorEncrypt($this->username))
+            ->addPost('password', Encryption::xorEncrypt($this->password))
+            ->addPost('mix_mode', '')
+            ->addPost('mobile', '')
+            ->addPost('captcha', '')
+            ->addPost('mix_mode', 1)
+            ->addPost('multi_login', 1)
             ->execute()
             ->getDecodedResponse(true);
     }
@@ -96,11 +121,9 @@ class TikTok
      * @return mixed
      * @throws Exception
      */
-    public function follow(
-        $secUserId,
-        $channelId = 3)
+    public function follow($secUserId, $channelId = 3)
     {
-         return $this->request('aweme/v1/commit/follow/user/')
+        return $this->request('aweme/v1/commit/follow/user/')
              ->setBaseUrl(3)
              ->addParam('sec_user_id', $secUserId)
              ->addParam('from', 0)
@@ -111,8 +134,11 @@ class TikTok
              ->getDecodedResponse();
     }
 
-    public function like(
-        $mediaId)
+    /**
+     * @param $mediaId
+     * @return mixed|string
+     */
+    public function like($mediaId)
     {
         return $this->request('aweme/v1/commit/item/digg/')
             ->setBaseUrl(3)
@@ -120,18 +146,25 @@ class TikTok
             ->addParam('type', 1)
             ->execute()
             ->getDecodedResponse();
-
     }
 
+    /**
+     * @return mixed|string
+     */
     public function registerVerifyAge()
     {
         return $this->request('aweme/v1/register/verification/age/')
-            ->addParam('birthday','1998-05-30')
+            ->addParam('birthday', '1998-05-30')
             ->execute()
             ->getDecodedResponse();
     }
 
 
+    /**
+     * @param $email
+     * @param $password
+     * @return mixed|string
+     */
     public function register($email, $password)
     {
         $request = $this->request('passport/email/register/v2/')
@@ -144,11 +177,15 @@ class TikTok
         return $request->getDecodedResponse();
     }
 
+    /**
+     * @param $email
+     * @return mixed|string
+     */
     public function checkEmailRegistered($email)
     {
         return $this->request('passport/user/check_email_registered/')
-            ->addPost('mix_mode',1)
-            ->addPost('email',Encryption::xorEncrypt($email))
+            ->addPost('mix_mode', 1)
+            ->addPost('email', Encryption::xorEncrypt($email))
             ->execute()
             ->getDecodedResponse();
     }
@@ -161,12 +198,16 @@ class TikTok
     public function changeUsername($newUsername)
     {
         return $this->request('aweme/v1/commit/user/')
-            ->addPost('unique_id',$newUsername)
+            ->addPost('unique_id', $newUsername)
             ->execute()
             ->getDecodedResponse();
     }
 
 
+    /**
+     * @return string
+     * @throws Exception
+     */
     public function getPuzzleAddress(): string
     {
         $iid = $this->storage->getUser()->deviceInstallID();
@@ -174,6 +215,11 @@ class TikTok
         return "https://verification-va.musical.ly/view?aid=1233&lang=tr&app_name=musical_ly&iid={$iid}&vc=2021409030&did={$device_id}&ch=googleplay&os=0&challenge_code=1105";
     }
 
+    /**
+     * @param int $node
+     * @return mixed|string
+     * @throws Exception
+     */
     public function getCaptcha($node = 1105)
     {
         return $this->request('get')
@@ -196,6 +242,15 @@ class TikTok
     }
 
 
+    /**
+     * @param $id
+     * @param $url1
+     * @param $url2
+     * @param $tip_y
+     * @return mixed|string
+     * @throws ImagickException
+     * @throws JsonException
+     */
     public function solveCaptcha($id, $url1, $url2, $tip_y)
     {
         $solver = (new CaptchaSolver())->solve($id, $url1, $url2, $tip_y);
@@ -227,48 +282,48 @@ class TikTok
         $binary = Encryption::deviceRegisterData();
         $register = $this->request('service/2/device_register/')
             ->setBaseUrl(2)
-            ->addParam('ac','wifi')
-            ->addParam('channel','googleplay')
-            ->addParam('aid','1233')
-            ->addParam('app_name','musical_ly')
-            ->addParam('version_code','130211')
-            ->addParam('version_name','13.2.11')
-            ->addParam('device_platform','android')
-            ->addParam('ab_version','13.2.11')
-            ->addParam('ssmix','a')
-            ->addParam('device_type',$binary['data']['header']['device_model'])
-            ->addParam('device_brand',$binary['data']['header']['device_brand'])
-            ->addParam('language','en')
-            ->addParam('os_api',25)
-            ->addParam('os_version','7.1.2')
-            ->addParam('uuid',Encryption::generateUUID(false))
-            ->addParam('openudid',$binary['data']['header']['openudid'])
-            ->addParam('manifest_version_code','2019092901')
-            ->addParam('resolution',$binary['data']['header']['resolution'])
-            ->addParam('dpi',$binary['data']['header']['density_dpi'])
-            ->addParam('update_version_code','2019092901')
-            ->addParam('app_type','normal')
-            ->addParam('sys_region','US')
-            ->addParam('is_my_cn',0)
-            ->addParam('pass-route',1)
-            ->addParam('mcc_mnc',$binary['data']['header']['mcc_mnc'])
-            ->addParam('pass-region','1')
-            ->addParam('timezone_name','America/New_York')
-            ->addParam('carrier_region_v2',$binary['carrier'][0])
-            ->addParam('timezone_offset',0)
-            ->addParam('build_number','13.2.11')
-            ->addParam('region','US')
-            ->addParam('uoo',0)
-            ->addParam('app_language','en')
-            ->addParam('carrier_region','US')
-            ->addParam('locale','en')
-            ->addParam('ac2','wifi5g')
+            ->addParam('ac', 'wifi')
+            ->addParam('channel', 'googleplay')
+            ->addParam('aid', '1233')
+            ->addParam('app_name', 'musical_ly')
+            ->addParam('version_code', '130211')
+            ->addParam('version_name', '13.2.11')
+            ->addParam('device_platform', 'android')
+            ->addParam('ab_version', '13.2.11')
+            ->addParam('ssmix', 'a')
+            ->addParam('device_type', $binary['data']['header']['device_model'])
+            ->addParam('device_brand', $binary['data']['header']['device_brand'])
+            ->addParam('language', 'en')
+            ->addParam('os_api', 25)
+            ->addParam('os_version', '7.1.2')
+            ->addParam('uuid', Encryption::generateUUID(false))
+            ->addParam('openudid', $binary['data']['header']['openudid'])
+            ->addParam('manifest_version_code', '2019092901')
+            ->addParam('resolution', $binary['data']['header']['resolution'])
+            ->addParam('dpi', $binary['data']['header']['density_dpi'])
+            ->addParam('update_version_code', '2019092901')
+            ->addParam('app_type', 'normal')
+            ->addParam('sys_region', 'US')
+            ->addParam('is_my_cn', 0)
+            ->addParam('pass-route', 1)
+            ->addParam('mcc_mnc', $binary['data']['header']['mcc_mnc'])
+            ->addParam('pass-region', '1')
+            ->addParam('timezone_name', 'America/New_York')
+            ->addParam('carrier_region_v2', $binary['carrier'][0])
+            ->addParam('timezone_offset', 0)
+            ->addParam('build_number', '13.2.11')
+            ->addParam('region', 'US')
+            ->addParam('uoo', 0)
+            ->addParam('app_language', 'en')
+            ->addParam('carrier_region', 'US')
+            ->addParam('locale', 'en')
+            ->addParam('ac2', 'wifi5g')
             ->addParam('_rticket', time() * 1000)
-            ->addParam('ts',time())
+            ->addParam('ts', time())
             ->setDisableDefaultParams(true)
-            ->addCurl(CURLOPT_POST,true)
-            ->addCurl(CURLOPT_POSTFIELDS,$binary['encoded'])
-            ->addCurl(CURLOPT_HTTPHEADER,[
+            ->addCurl(CURLOPT_POST, true)
+            ->addCurl(CURLOPT_POSTFIELDS, $binary['encoded'])
+            ->addCurl(CURLOPT_HTTPHEADER, [
                 'Content-Type: application/json; charset=utf-8',
                 'host: applog.musical.ly',
                 'sdk-version: 1',
@@ -278,15 +333,15 @@ class TikTok
             ->execute()
             ->getResponse();
 
-        return new RegisterDeviceModel($register,$binary);
+        return new RegisterDeviceModel($register, $binary);
     }
 
     /**
      * @param $endpoint
      * @return Request
      */
-    public function request($endpoint)
+    public function request($endpoint): Request
     {
-        return new Request($endpoint,$this);
+        return new Request($endpoint, $this);
     }
 }

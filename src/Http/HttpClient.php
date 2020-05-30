@@ -3,7 +3,7 @@
 
 namespace TikTokAPI\Http;
 
-
+use Exception;
 use JsonException;
 use RuntimeException;
 use TikTokAPI\Encryption\CreateToken;
@@ -31,11 +31,11 @@ class HttpClient
         $curl = curl_init();
         $options = [
             CURLOPT_URL => $this->request->getBaseUrl().$this->request->getEndpoint().$this->request->getRequestParams(),
-            CURLOPT_RETURNTRANSFER  => TRUE,
-            CURLOPT_FOLLOWLOCATION  => TRUE,
-            CURLOPT_HEADER          => TRUE,
-            CURLOPT_SSL_VERIFYHOST  => FALSE,
-            CURLOPT_SSL_VERIFYPEER  => FALSE,
+            CURLOPT_RETURNTRANSFER  => true,
+            CURLOPT_FOLLOWLOCATION  => true,
+            CURLOPT_HEADER          => true,
+            CURLOPT_SSL_VERIFYHOST  => false,
+            CURLOPT_SSL_VERIFYPEER  => false,
             CURLOPT_ENCODING        => 'gzip, deflate'
         ];
 
@@ -45,25 +45,24 @@ class HttpClient
 
         if ($this->request->getNeedsCookie() === true):
             $options[CURLOPT_COOKIEFILE]  = $this->request->parent->storage->getCookiePath();
-            $options[CURLOPT_COOKIEJAR]   = $this->request->parent->storage->getCookiePath();
+        $options[CURLOPT_COOKIEJAR]   = $this->request->parent->storage->getCookiePath();
         endif;
 
         if ($this->request->hasPost()):
-            $options[CURLOPT_POST] = TRUE;
-            $options[CURLOPT_POSTFIELDS] = $this->request->getRequestPosts();
-            $this->request->addHeader('X-SS-STUB',strtoupper(md5($this->request->getRequestPosts())));
-        elseif ($this->request->getPostPayload() !== null):
-            $options[CURLOPT_POST] = TRUE;
-            $options[CURLOPT_POSTFIELDS] = $this->request->getPostPayload();
+            $options[CURLOPT_POST] = true;
+        $options[CURLOPT_POSTFIELDS] = $this->request->getRequestPosts();
+        $this->request->addHeader('X-SS-STUB', strtoupper(md5($this->request->getRequestPosts()))); elseif ($this->request->getPostPayload() !== null):
+            $options[CURLOPT_POST] = true;
+        $options[CURLOPT_POSTFIELDS] = $this->request->getPostPayload();
         endif;
 
-        $this->request->addHeader('User-Agent',$this->request->parent->storage->getUser()->deviceUseragent());
+        $this->request->addHeader('User-Agent', $this->request->parent->storage->getUser()->deviceUseragent());
 
 
         if ($this->request->isDisabledTokens() === false):
-            $createToken = new CreateToken($this->request->getBaseUrl().$this->request->getEndpoint(),$this->request->getRequestParams(true),$this->request->getRequestPosts(),$this->request->getRequestHeaders(true));
-            $this->request->addHeader('X-Gorgon',$createToken->getXGorgon());
-            $this->request->addHeader('X-Khronos',$createToken->getXKhronos());
+            $createToken = new CreateToken($this->request->getBaseUrl().$this->request->getEndpoint(), $this->request->getRequestParams(true), $this->request->getRequestPosts(), $this->request->getRequestHeaders(true));
+        $this->request->addHeader('X-Gorgon', $createToken->getXGorgon());
+        $this->request->addHeader('X-Khronos', $createToken->getXKhronos());
         endif;
 
 
@@ -75,9 +74,9 @@ class HttpClient
         if ($this->request->hasCurlOptions()):
             foreach ($this->request->getRequestCurl() as $key => $value):
                 $options[$key] = $value;
-            endforeach;
+        endforeach;
         endif;
-        curl_setopt_array($curl,$options);
+        curl_setopt_array($curl, $options);
         $resp = curl_exec($curl);
         $header_len = curl_getinfo($curl, CURLINFO_HEADER_SIZE);
         $header = substr($resp, 0, $header_len);
@@ -121,14 +120,17 @@ class HttpClient
     /**
      * @param bool $assoc
      * @return mixed
-     * @throws JsonException
      */
     public function getDecodedResponse($assoc = true)
     {
         if (!$this->requestResponse) {
             throw new RuntimeException('No Response From Server');
         }
-        return json_decode($this->requestResponse, $assoc, 512, JSON_THROW_ON_ERROR);
+        try {
+            return json_decode($this->requestResponse, $assoc, 512, JSON_THROW_ON_ERROR);
+        } catch (JsonException $e) {
+            return "";
+        }
     }
 
     /**
@@ -152,7 +154,6 @@ class HttpClient
                 if (strtolower($key) === 'set-cookie') {
                     $this->_cookies[] = $value;
                 }
-
             }
         }
 
@@ -167,7 +168,4 @@ class HttpClient
     {
         return (new HttpCookies($this->_cookies))->getCookie($key);
     }
-
-
-
 }

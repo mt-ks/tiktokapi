@@ -6,7 +6,6 @@ use Exception;
 
 class RegisterDeviceModel
 {
-
     protected array $data;
     protected array $registerData = [];
 
@@ -16,9 +15,9 @@ class RegisterDeviceModel
      * @param $registerData
      * @throws Exception
      */
-    public function __construct($responseData,$registerData)
+    public function __construct($responseData, $registerData)
     {
-        $this->data = json_decode($responseData,true,512,JSON_THROW_ON_ERROR);
+        $this->data = json_decode($responseData, true, 512, JSON_THROW_ON_ERROR);
         $this->registerData = $registerData;
     }
 
@@ -50,7 +49,6 @@ class RegisterDeviceModel
     public function getDeviceType()
     {
         return $this->registerData['data']['header']['device_model'] ?? null;
-
     }
 
     public function getDeviceBrand()
@@ -69,5 +67,4 @@ class RegisterDeviceModel
             'data'     => $this->registerData
         ], JSON_THROW_ON_ERROR);
     }
-
 }

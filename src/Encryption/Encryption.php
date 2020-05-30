@@ -3,7 +3,6 @@
 
 namespace TikTokAPI\Encryption;
 
-
 use TikTokAPI\Device\UserAgentBuilder;
 
 class Encryption
@@ -31,7 +30,8 @@ class Encryption
     }
 
     public static function generateUUID(
-        $keepDashes = true)
+        $keepDashes = true
+    )
     {
         $uuid = sprintf(
             '%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
@@ -105,5 +105,4 @@ class Encryption
           'carrier' => $randCarrier
         ];
     }
-
 }

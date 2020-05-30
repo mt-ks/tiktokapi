@@ -37,7 +37,8 @@ class Request
         return Constants::API_URL[$this->_base] ?? 'https://api2-19-h2.musical.ly/';
     }
 
-    public function getEndpoint() : string {
+    public function getEndpoint() : string
+    {
         return $this->endpoint;
     }
 
@@ -131,8 +132,9 @@ class Request
 
     public function getRequestHeaders($asArray = false) : array
     {
-        if ($asArray)
+        if ($asArray) {
             return $this->_header;
+        }
 
         $headers = [];
         foreach ($this->_header as $key => $value):
@@ -211,12 +213,14 @@ class Request
         return $this->isDisabledTokens;
     }
 
-    public function setPostPayload($payload) : Request {
+    public function setPostPayload($payload) : Request
+    {
         $this->postPayload = $payload;
         return $this;
     }
 
-    public function getPostPayload() : ?string {
+    public function getPostPayload() : ?string
+    {
         return $this->postPayload;
     }
 
@@ -227,6 +231,4 @@ class Request
     {
         return new HttpClient($this);
     }
-
-
 }

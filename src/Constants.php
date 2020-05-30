@@ -3,10 +3,8 @@
 
 namespace TikTokAPI;
 
-
 class Constants
 {
-
     public const API_URL = [
         'https://api2.musical.ly/',
         'https://verification-va.musical.ly/',
@@ -19,7 +17,7 @@ class Constants
     // App related
     public const APP_NAME = 'musical_ly';
     public const TIKTOK_VERSION = '13.1.3';
-    public CONST VERSION_CODE = '2019091803';
+    public const VERSION_CODE = '2019091803';
     public const BUILD_VERSION = '126101';
     public const SDK_VERSION = '380';
     public const APP_TYPE = 'normal';

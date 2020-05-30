@@ -3,7 +3,6 @@
 
 namespace TikTokAPI\Encryption;
 
-
 use Exception;
 use MClient\Request;
 
@@ -32,7 +31,7 @@ class CreateToken
         $c = curl_init();
         $o = [
             CURLOPT_URL => self::SERVER_ADDRESS,
-            CURLOPT_RETURNTRANSFER => TRUE,
+            CURLOPT_RETURNTRANSFER => true,
             CURLOPT_POSTFIELDS => json_encode($data, JSON_THROW_ON_ERROR),
             CURLOPT_HTTPHEADER => [
                 'content-type: application/json'
@@ -42,7 +41,6 @@ class CreateToken
         $r = curl_exec($c);
         curl_close($c);
         $this->request = json_decode($r, true, 512, JSON_THROW_ON_ERROR);
-
     }
 
     /**
@@ -60,5 +58,4 @@ class CreateToken
     {
         return $this->request['X-Gorgon'] ?? null;
     }
-
 }

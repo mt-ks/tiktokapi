@@ -3,7 +3,6 @@
 
 namespace TikTokAPI\Device;
 
-
 use TikTokAPI\Constants;
 
 class UserAgentBuilder
@@ -16,7 +15,7 @@ class UserAgentBuilder
     {
         $randomPhone         = self::randomPhoneName();
         $androidSDKINT       = self::androidVersion();
-        return sprintf('com.zhiliaoapp.musically/%s (Linux; U; Android %s; tr_TR; %s; Build/M1AJB; Cronet/58.0.2991.0)',Constants::MANIFEST_VERSION_CODE,$androidSDKINT,$randomPhone['model_number']);
+        return sprintf('com.zhiliaoapp.musically/%s (Linux; U; Android %s; tr_TR; %s; Build/M1AJB; Cronet/58.0.2991.0)', Constants::MANIFEST_VERSION_CODE, $androidSDKINT, $randomPhone['model_number']);
     }
 
     /**
@@ -485,5 +484,4 @@ class UserAgentBuilder
             ["310", "980", "AT&T Wireless Inc."]
         ];
     }
-
 }
