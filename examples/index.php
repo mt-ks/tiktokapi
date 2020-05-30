@@ -50,15 +50,15 @@ $deviceInfo = [
 ];
 
 try {
-    $t = new \TikTokAPI\TikTok('35denizkaraca35', '9BIGMKhUCc2u', $deviceInfo);
-   // $register = $t->registerDevice();
-//
-//    $t->storage->set('device_type',$register->getDeviceType())
-//        ->set('device_brand',$register->getDeviceBrand())
-//        ->set('openudid',$register->getOpenUDID())
-//        ->set('device_id',$register->getDeviceId())
-//        ->set('useragent',$register->getUseragent())
-//        ->set('iid',$register->getInstallId());
+    $t = new \TikTokAPI\TikTok(uniqid(), '9BIGMKhUCc2u', $deviceInfo);
+    $register = $t->registerDevice();
+
+    $t->storage->set('device_type',$register->getDeviceType())
+        ->set('device_brand',$register->getDeviceBrand())
+        ->set('openudid',$register->getOpenUDID())
+        ->set('device_id',$register->getDeviceId())
+        ->set('useragent',$register->getUseragent())
+        ->set('iid',$register->getInstallId());
 
     print_r($t->login());
 
