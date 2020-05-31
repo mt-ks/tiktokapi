@@ -101,7 +101,7 @@ class Encryption
         return [
           'encoded' => json_encode($appData, JSON_THROW_ON_ERROR),
           'data'    => $appData,
-          'ua'      => "com.zhiliaoapp.musically/2019092901 (Linux; U; Android 7.1.2 en; $randDevice[1]; Build/$randDevice[1]; Cronet/58.0.2991.0)",
+          'ua'      => "com.zhiliaoapp.musically/2019091803 (Linux; U; Android 7.1.2 en; $randDevice[1]; Build/$randDevice[1]; Cronet/58.0.2991.0)",
           'carrier' => $randCarrier
         ];
     }

@@ -28,7 +28,7 @@ class Constants
     public const CHANNEL = 'googleplay';
     public  const OS_VERSION = '8.0.0';
     public const OS_API = '16';
-    public const LANGUAGE = 'en';
-    public const REGION = 'US';
+    public const LANGUAGE = 'tr';
+    public const REGION = 'TR';
     public const RESOLUTION = '1440*2792';
 }

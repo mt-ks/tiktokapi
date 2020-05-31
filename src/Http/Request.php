@@ -151,13 +151,6 @@ class Request
 
     public function initDefaultParams(): void
     {
-
-//        $timestamp = round(microtime(true) * 1000);
-//        foreach ($this->defaultParamsList() as $k => $v)
-//        {
-//            $this->addParam($k,$v);
-//        }
-
         $timestamp = round(microtime(true) * 1000);
         $this
             ->addParam('account_sdk_version', Constants::SDK_VERSION)

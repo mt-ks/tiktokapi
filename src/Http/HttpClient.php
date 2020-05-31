@@ -48,6 +48,7 @@ class HttpClient
         $options[CURLOPT_COOKIEJAR]   = $this->request->parent->storage->getCookiePath();
         endif;
 
+
         if ($this->request->hasPost()):
             $options[CURLOPT_POST] = true;
         $options[CURLOPT_POSTFIELDS] = $this->request->getRequestPosts();
@@ -55,7 +56,6 @@ class HttpClient
             $options[CURLOPT_POST] = true;
         $options[CURLOPT_POSTFIELDS] = $this->request->getPostPayload();
         endif;
-
         $this->request->addHeader('User-Agent', $this->request->parent->storage->getUser()->deviceUseragent());
 
 
@@ -129,7 +129,7 @@ class HttpClient
         try {
             return json_decode($this->requestResponse, $assoc, 512, JSON_THROW_ON_ERROR);
         } catch (JsonException $e) {
-            return "";
+            return [];
         }
     }
 

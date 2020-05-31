@@ -102,13 +102,14 @@ class TikTok
     public function login()
     {
         return $this->request('passport/user/login/')
-            ->addPost('username', Encryption::xorEncrypt($this->username))
-            ->addPost('password', Encryption::xorEncrypt($this->password))
-            ->addPost('mix_mode', '')
-            ->addPost('mobile', '')
-            ->addPost('captcha', '')
             ->addPost('mix_mode', 1)
-            ->addPost('multi_login', 1)
+            ->addPost('username', Encryption::xorEncrypt($this->username))
+            ->addPost('email','')
+            ->addPost('mobile', '')
+            ->addPost('account','')
+            ->addPost('password', Encryption::xorEncrypt($this->password))
+            ->addPost('multi_login', 0)
+            ->addPost('captcha', '')
             ->execute()
             ->getDecodedResponse(true);
     }
@@ -212,7 +213,7 @@ class TikTok
     {
         $iid = $this->storage->getUser()->deviceInstallID();
         $device_id = $this->storage->getUser()->deviceId();
-        return "https://verification-va.musical.ly/view?aid=1233&lang=tr&app_name=musical_ly&iid={$iid}&vc=2021409030&did={$device_id}&ch=googleplay&os=0&challenge_code=1105";
+        return "https://verification-va.musical.ly/view?aid=1233&lang=tr&app_name=musical_ly&iid={$iid}&vc=".Constants::VERSION_CODE."&did={$device_id}&ch=googleplay&os=0&challenge_code=1105";
     }
 
     /**
