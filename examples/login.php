@@ -8,8 +8,8 @@ try{
 
     $t = new \TikTokAPI\TikTok($username, $password);
 //    $t->setProxy($proxy);
-//    $t->changeDeviceInfo();
-//    exit;
+////    $t->changeDeviceInfo();
+////    exit;
 //    //$t->changeDeviceInfo();
 //    $login = $t->login();
 //    print_r($login);
@@ -20,6 +20,7 @@ try{
 //        {
 //            $solve = $t->solveCaptcha($captcha['data']['id'],$captcha['data']['question']['url1'],$captcha['data']['question']['url2'],45);
 //            print_r($solve);
+//            sleep(3);
 //            if (isset($solve['ret']) && (int)$solve['ret'] === 200)
 //            {
 //                print_r($t->login());
