@@ -1,23 +1,24 @@
 {
-    "name": "mehmetbeyhz/tiktokapi",
-    "description": "PHP Unofficial TikTok API",
-    "type": "library",
-    "require": {
-      "ext-curl": "*",
-      "ext-json": "*",
-      "ext-imagick": "*"
-    },
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "mehmetbeyhz",
-            "email": "mehmetbeyhz@gmail.com"
-        }
-    ],
-    "minimum-stability": "dev",
-    "autoload": {
-        "psr-4": {
-            "TikTokAPI\\" : "src"
-        }
+  "name": "mehmetbeyhz/tiktokapi",
+  "description": "PHP Unofficial TikTok API",
+  "type": "library",
+  "require": {
+    "ext-curl": "*",
+    "ext-json": "*",
+    "ext-imagick": "*",
+    "mehmetbeyhz/easy-json-mapper": "dev-master"
+  },
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "mehmetbeyhz",
+      "email": "mehmetbeyhz@gmail.com"
     }
+  ],
+  "minimum-stability": "dev",
+  "autoload": {
+    "psr-4": {
+      "TikTokAPI\\": "src"
+    }
+  }
 }

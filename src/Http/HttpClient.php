@@ -36,6 +36,7 @@ class HttpClient
             CURLOPT_HEADER          => true,
             CURLOPT_SSL_VERIFYHOST  => false,
             CURLOPT_SSL_VERIFYPEER  => false,
+            CURLOPT_TIMEOUT         => 10,
             CURLOPT_ENCODING        => 'gzip, deflate'
         ];
 
@@ -43,9 +44,11 @@ class HttpClient
             $options[CURLOPT_PROXY] = $this->request->parent->getProxy();
         endif;
 
+        $this->request->addHeader('Content-Type','application/x-www-form-urlencoded; charset=UTF-8');
+
         if ($this->request->getNeedsCookie() === true):
             $options[CURLOPT_COOKIEFILE]  = $this->request->parent->storage->getCookiePath();
-        $options[CURLOPT_COOKIEJAR]   = $this->request->parent->storage->getCookiePath();
+            $options[CURLOPT_COOKIEJAR]   = $this->request->parent->storage->getCookiePath();
         endif;
 
 

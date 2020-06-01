@@ -29,6 +29,16 @@ class Encryption
         return substr($megaRandomHash, 16);
     }
 
+    public static  function generateRandomString($length = 16) {
+        $characters = '0123456789';
+        $charactersLength = strlen($characters);
+        $randomString = '';
+        for ($i = 0; $i < $length; $i++) {
+            $randomString .= $characters[rand(0, $charactersLength - 1)];
+        }
+        return $randomString;
+    }
+
     public static function generateUUID(
         $keepDashes = true
     )
@@ -62,14 +72,14 @@ class Encryption
             'magic_tag' => 'ss_app_log',
             'header'    => [
                 'display_name'          => 'TikTok',
-                'update_version_code'   => "2019091803",
-                'manifest_version_code' => "2019091803",
+                'update_version_code'   => "2019092901",
+                'manifest_version_code' => "2019092901",
                 'aid'                   => "1233",
                 'channel'               => 'googleplay',
                 'appkey'                => '5559e28267e58eb4c1000012',
                 'package'               => 'com.zhiliaoapp.musically',
-                'app_version'           => '13.1.3',
-                'version_code'          => '2019091803',
+                'app_version'           => '9.9.0',
+                'version_code'          => '130211',
                 'sdk_version'           => '2.5.5.8',
                 'os'                    => 'Android',
                 'os_version'            => '7.1.2',
@@ -83,7 +93,7 @@ class Encryption
                 'resolution'            => $randDevice[2],
                 'language'              => 'en',
                 'mc'                    => self::randomMac(),
-                'timezone'              => 1,
+                'timezone'              => 0,
                 'access'                => 'wifi',
                 'not_request_sender'    => 0,
                 'carrier'               => $randCarrier[2],

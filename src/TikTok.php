@@ -8,6 +8,7 @@ use JsonException;
 use TikTokAPI\Encryption\Encryption;
 use TikTokAPI\Http\Request;
 use TikTokAPI\Models\RegisterDeviceModel;
+use TikTokAPI\Models\RegisterDeviceResponse;
 use TikTokAPI\Storage\UserStorage;
 
 class TikTok
@@ -71,9 +72,9 @@ class TikTok
         $registerNewDevice = $this->registerDevice();
         $this->storage->set('device_type', $registerNewDevice->getDeviceType())
             ->set('device_brand', $registerNewDevice->getDeviceBrand())
-            ->set('openudid', $registerNewDevice->getOpenUDID())
-            ->set('device_id', $registerNewDevice->getDeviceId())
-            ->set('useragent', $registerNewDevice->getUseragent())
+            ->set('openudid', $registerNewDevice->getOpenudid())
+            ->set('device_id', $registerNewDevice->getDeviceIdStr())
+            ->set('useragent', $registerNewDevice->getUserAgent())
             ->set('iid', $registerNewDevice->getInstallId());
     }
 
@@ -283,6 +284,7 @@ class TikTok
         $binary = Encryption::deviceRegisterData();
         $register = $this->request('service/2/device_register/')
             ->setBaseUrl(2)
+            ->setNeedsCookie(false)
             ->addParam('ac', 'wifi')
             ->addParam('channel', 'googleplay')
             ->addParam('aid', '1233')
@@ -297,7 +299,7 @@ class TikTok
             ->addParam('language', 'en')
             ->addParam('os_api', 25)
             ->addParam('os_version', '7.1.2')
-            ->addParam('uuid', Encryption::generateUUID(false))
+            ->addParam('uuid', Encryption::generateRandomString(15))
             ->addParam('openudid', $binary['data']['header']['openudid'])
             ->addParam('manifest_version_code', '2019092901')
             ->addParam('resolution', $binary['data']['header']['resolution'])
@@ -332,9 +334,15 @@ class TikTok
                 'user-agent: '.$binary['ua']
             ])
             ->execute()
-            ->getResponse();
+            ->getDecodedResponse();
 
-        return new RegisterDeviceModel($register, $binary);
+        $register['user_agent']   = $binary['ua'];
+        $register['openudid']     = $binary['data']['header']['openudid'];
+        $register['device_type']  = $binary['data']['header']['device_model'];
+        $register['device_brand'] = $binary['data']['header']['device_brand'];
+
+        return new RegisterDeviceResponse($register);
+
     }
 
     /**

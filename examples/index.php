@@ -43,9 +43,9 @@ $deviceInfo = [
     'device_brand' => 'TCL',
     'device_type' => '9027F',
     'openudid' => '71c300d58b222214',
-    'device_id' => '6832320459406181894',
+    'device_id' => '6735782704719316486',
     'android_id' => '71c300d58b222214',
-    'iid' => '6832320786397742854',
+    'iid' => '6832794245474256645',
     'useragent' => 'com.zhiliaoapp.musically/2019091803 (Linux; U; Android 10; tr_TR; SM-A505F; Build/QP1A.190711.020; Cronet/58.0.2991.0)'
 ];
 
@@ -56,7 +56,7 @@ try {
 
     $register = $t->registerDevice();
 
-
+//
     $t->storage->set('device_type',$register->getDeviceType())
         ->set('device_brand',$register->getDeviceBrand())
         ->set('openudid',$register->getOpenUDID())

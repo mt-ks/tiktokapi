@@ -4,7 +4,6 @@
 namespace TikTokAPI\Encryption;
 
 use Exception;
-use MClient\Request;
 
 class CreateToken
 {
