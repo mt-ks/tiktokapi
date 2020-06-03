@@ -59,7 +59,7 @@ class TikTok
      */
     public function checkDeviceStatus(): void
     {
-        if (!$this->storage->getUser()->deviceInstallID()) {
+        if (!$this->storage->getUser()->getInstallId()) {
             $this->changeDeviceInfo();
         }
     }
@@ -74,8 +74,13 @@ class TikTok
             ->set('device_brand', $registerNewDevice->getDeviceBrand())
             ->set('openudid', $registerNewDevice->getOpenudid())
             ->set('device_id', $registerNewDevice->getDeviceIdStr())
-            ->set('useragent', $registerNewDevice->getUserAgent())
-            ->set('iid', $registerNewDevice->getInstallId());
+            ->set('useragent', $registerNewDevice->getUseragent())
+            ->set('install_id', $registerNewDevice->getInstallIdStr())
+            ->set('carrier_region',$registerNewDevice->getCarrierRegion())
+            ->set('carrier_region_v2',$registerNewDevice->getCarrierRegionV2())
+            ->set('dpi',$registerNewDevice->getDpi())
+            ->set('resolution',$registerNewDevice->getResolution())
+            ->set('mcc_mnc',$registerNewDevice->getMccMnc());
     }
 
     /**
@@ -143,11 +148,42 @@ class TikTok
     public function like($mediaId)
     {
         return $this->request('aweme/v1/commit/item/digg/')
-            ->setBaseUrl(3)
             ->addParam('aweme_id', $mediaId)
             ->addParam('type', 1)
             ->execute()
             ->getDecodedResponse();
+    }
+
+    public function report($action,$verifyTime)
+    {
+        $log = [
+            'aid' => 1233,
+            'lang' => 'tr',
+            'app_name' => 'musical_ly',
+            'iid' => $this->storage->getUser()->getInstallId(),
+            'vc' => Constants::VERSION_CODE,
+            'did' => $this->storage->getUser()->getDeviceId(),
+            'ch' => Constants::CHANNEL,
+            'os' => '0',
+            'challenge_code' => 1105,
+            'time' => time(),
+            'verify_time' => $verifyTime,
+            'action' => $action,
+            'detailinfos' => [
+                'msg' => '滑动开始：可滑动'
+            ],
+            'mode' => 'slide'
+        ];
+        return $this->request('report')
+            ->setBaseUrl(1)
+            ->setPostPayload(json_encode($log, JSON_THROW_ON_ERROR))
+            ->addHeader('Cookie','store-idc=maliva; store-country-code=tr; sec_sessionid=')
+            ->addHeader('Referer',$this->getPuzzleAddress())
+            ->setDisableDefaultParams(true)
+            ->disableTokens(true)
+            ->execute()
+            ->getResponse();
+
     }
 
     /**
@@ -212,8 +248,8 @@ class TikTok
      */
     public function getPuzzleAddress(): string
     {
-        $iid = $this->storage->getUser()->deviceInstallID();
-        $device_id = $this->storage->getUser()->deviceId();
+        $iid = $this->storage->getUser()->getInstallId();
+        $device_id = $this->storage->getUser()->getDeviceId();
         return "https://verification-va.musical.ly/view?aid=1233&lang=tr&app_name=musical_ly&iid={$iid}&vc=".Constants::VERSION_CODE."&did={$device_id}&ch=googleplay&os=0&challenge_code=1105";
     }
 
@@ -225,14 +261,14 @@ class TikTok
     public function getCaptcha($node = 1105)
     {
         return $this->request('get')
-            ->setNeedsCookie(false)
             ->setBaseUrl(1)
+            ->setNeedsCookie(false)
             ->addParam('aid', 1233)
             ->addParam('lang', Constants::LANGUAGE)
             ->addParam('app_name', Constants::APP_NAME)
-            ->addParam('iid', $this->storage->getUser()->deviceInstallID())
+            ->addParam('iid', $this->storage->getUser()->getInstallId())
             ->addParam('vc', Constants::VERSION_CODE)
-            ->addParam('did', $this->storage->getUser()->deviceId())
+            ->addParam('did', $this->storage->getUser()->getDeviceId())
             ->addParam('ch', Constants::CHANNEL)
             ->addParam('challenge_code', $node)
             ->addParam('os', 0)
@@ -257,17 +293,18 @@ class TikTok
     {
         $solver = (new CaptchaSolver())->solve($id, $url1, $url2, $tip_y);
         return $this->request('verify')
-            ->setNeedsCookie(false)
             ->setBaseUrl(1)
+            ->setNeedsCookie(false)
             ->addParam('aid', 1233)
             ->addParam('lang', Constants::LANGUAGE)
             ->addParam('app_name', Constants::APP_NAME)
-            ->addParam('iid', $this->storage->getUser()->deviceInstallID())
+            ->addParam('iid', $this->storage->getUser()->getInstallId())
             ->addParam('vc', Constants::VERSION_CODE)
-            ->addParam('did', $this->storage->getUser()->deviceId())
+            ->addParam('did', $this->storage->getUser()->getDeviceId())
             ->addParam('ch', Constants::CHANNEL)
             ->addParam('challenge_code', 1105)
             ->addParam('os', 0)
+            ->addHeader('Referer',$this->getPuzzleAddress())
             ->disableTokens(true)
             ->setPostPayload($solver)
             ->execute()
@@ -276,15 +313,16 @@ class TikTok
 
 
     /**
+     * @param bool $needCookie
      * @return mixed
-     * @throws Exception
+     * @throws JsonException
      */
-    public function registerDevice()
+    public function registerDevice($needCookie = false)
     {
         $binary = Encryption::deviceRegisterData();
         $register = $this->request('service/2/device_register/')
             ->setBaseUrl(2)
-            ->setNeedsCookie(false)
+            ->setNeedsCookie($needCookie)
             ->addParam('ac', 'wifi')
             ->addParam('channel', 'googleplay')
             ->addParam('aid', '1233')
@@ -296,9 +334,9 @@ class TikTok
             ->addParam('ssmix', 'a')
             ->addParam('device_type', $binary['data']['header']['device_model'])
             ->addParam('device_brand', $binary['data']['header']['device_brand'])
-            ->addParam('language', 'en')
-            ->addParam('os_api', 25)
-            ->addParam('os_version', '7.1.2')
+            ->addParam('language', 'tr')
+            ->addParam('os_api', 29)
+            ->addParam('os_version', 10)
             ->addParam('uuid', Encryption::generateRandomString(15))
             ->addParam('openudid', $binary['data']['header']['openudid'])
             ->addParam('manifest_version_code', '2019092901')
@@ -306,20 +344,20 @@ class TikTok
             ->addParam('dpi', $binary['data']['header']['density_dpi'])
             ->addParam('update_version_code', '2019092901')
             ->addParam('app_type', 'normal')
-            ->addParam('sys_region', 'US')
+            ->addParam('sys_region', 'tr')
             ->addParam('is_my_cn', 0)
             ->addParam('pass-route', 1)
             ->addParam('mcc_mnc', $binary['data']['header']['mcc_mnc'])
             ->addParam('pass-region', '1')
             ->addParam('timezone_name', 'America/New_York')
             ->addParam('carrier_region_v2', $binary['carrier'][0])
-            ->addParam('timezone_offset', 0)
+            ->addParam('timezone_offset', 10800)
             ->addParam('build_number', '13.2.11')
-            ->addParam('region', 'US')
+            ->addParam('region', 'TR')
             ->addParam('uoo', 0)
-            ->addParam('app_language', 'en')
-            ->addParam('carrier_region', 'US')
-            ->addParam('locale', 'en')
+            ->addParam('app_language', 'tr')
+            ->addParam('carrier_region', 'TR')
+            ->addParam('locale', 'tr')
             ->addParam('ac2', 'wifi5g')
             ->addParam('_rticket', time() * 1000)
             ->addParam('ts', time())
@@ -336,10 +374,18 @@ class TikTok
             ->execute()
             ->getDecodedResponse();
 
-        $register['user_agent']   = $binary['ua'];
+
+        $register['useragent']   = $binary['ua'];
         $register['openudid']     = $binary['data']['header']['openudid'];
         $register['device_type']  = $binary['data']['header']['device_model'];
         $register['device_brand'] = $binary['data']['header']['device_brand'];
+        $register['carrier_region'] =  Constants::REGION;
+        $register['carrier_region_v2'] = $binary['carrier'][0];
+        $register['resolution'] =  $binary['data']['header']['resolution'];
+        $register['dpi'] =   $binary['data']['header']['density_dpi'];
+        $register['mcc_mnc'] =   $binary['data']['header']['mcc_mnc'];
+
+        print_r($register);
 
         return new RegisterDeviceResponse($register);
 

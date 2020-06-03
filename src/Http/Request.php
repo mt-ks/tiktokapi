@@ -149,50 +149,105 @@ class Request
     }
 
 
+
+
+    public function getDefaultParams() : void
+    {
+        $params =  [
+            'filter_warn'           => 0,
+            'bid_ad_params'         => '',
+            'android_id'            => $this->parent->storage->getUser()->getOpenudid(),
+            'ad_personality_mode'   => '1',
+            'ts'                    => time(),
+            'js_sdk_version'        => '',
+            'app_type'              => 'normal',
+            'os_api'                => '22',
+            'device_type'           => $this->parent->storage->getUser()->getDeviceType(),
+            'ssmix'                 => 'a',
+            'manifest_version_code' => '2019011531',
+            'dpi'                   => '320',
+            'carrier_region'        => 'US',
+            'carrier_region_v2'     => '286',
+            'app_name'              => 'musical_ly',
+            'version_name'          => '9.9.0',
+            'timezone_offset'       => '7200',
+            'pass-route'            => '1',
+            'pass-region'           => '1',
+            'is_my_cn'              => 0,
+            'fp'                    => '',
+            'ac'                    => 'wifi',
+            'update_version_code'   => '2019011531',
+            'channel'               => 'googleplay',
+            '_rticket'              => time(),
+            'device_platform'       => 'android',
+            'iid'                   => $this->parent->storage->getUser()->getInstallId(),
+            'build_number'          => '9.9.0',
+            'version_code'          => '990',
+            'timezone_name'         => 'Europe/Istanbul',
+            'account_region'        => 'V',
+            'openudid'              => $this->parent->storage->getUser()->getOpenudid(),
+            'device_id'             => $this->parent->storage->getUser()->getDeviceId(),
+            'sys_region'            => 'US',
+            'app_language'          => 'us',
+            'resolution'            => '720*1280',
+            'os_version'            => '7.1.2',
+            'device_brand'          => strtolower($this->parent->storage->getUser()->getDeviceBrand()),
+            'language'              => 'us',
+            'aid'                   => '1233',
+            'mcc_mnc'               => '28601',
+            'as'                    => 'a1a559fdcf574eae756577',
+            'cp'                    => '9d71ee5bf853d9eae1acOg',
+            'mas'                   => '0166adcaa7a52a86ad9701e5b495f24a15ececac6caceca686a62c'
+        ];
+        foreach ($params as $key => $value)
+        {
+            $this->addParam($key,$value);
+        }
+    }
     public function initDefaultParams(): void
     {
         $timestamp = round(microtime(true) * 1000);
-        $this
-            ->addParam('account_sdk_version', Constants::SDK_VERSION)
-            ->addParam('manifest_version_code', Constants::VERSION_CODE)
-            ->addParam('_rticket', $timestamp)
-            ->addParam('app_language', Constants::LANGUAGE)
-            ->addParam('app_type', Constants::APP_TYPE)
-            ->addParam('iid', $this->parent->storage->getUser()->deviceInstallID())
-            ->addParam('channel', Constants::CHANNEL)
-            ->addParam('device_type', $this->parent->storage->getUser()->deviceType())
-            ->addParam('language', Constants::LANGUAGE)
-            ->addParam('locale', Constants::LANGUAGE)
-            ->addParam('resolution', Constants::RESOLUTION)
-            ->addParam('openudid', $this->parent->storage->getUser()->deviceOpenUDID())
-            ->addParam('update_version_code', Constants::VERSION_CODE)
-            ->addParam('ac2', 'wifi')
-            ->addParam('sys_region', Constants::REGION)
-            ->addParam('os_api', Constants::OS_API)
-            ->addParam('uoo', 1)
-            ->addParam('is_my_cn', 0)
-            ->addParam('timezone_name', 'America/New_York')
-            ->addParam('dpi', '560')
-            ->addParam('carrier_region', Constants::REGION)
-            ->addParam('ac', 'wifi')
-            ->addParam('device_id', $this->parent->storage->getUser()->deviceId())
-            ->addParam('pass-route', 1)
-            ->addParam('mcc_mnc', 310260)
-            ->addParam('os_version', Constants::OS_VERSION)
-            ->addParam('timezone_offset', 0)
-            ->addParam('version_code', Constants::BUILD_VERSION)
-            ->addParam('carrier_region_v2', 310)
-            ->addParam('app_name', Constants::APP_NAME)
-            ->addParam('ab_version', Constants::TIKTOK_VERSION)
-            ->addParam('version_name', Constants::TIKTOK_VERSION)
-            ->addParam('device_brand', ucfirst(Constants::PLATFORM))
-            ->addParam('ssmix', 'a')
-            ->addParam('pass-region', 1)
-            ->addParam('device_platform', Constants::PLATFORM)
-            ->addParam('build_number', Constants::TIKTOK_VERSION)
-            ->addParam('region', Constants::REGION)
-            ->addParam('aid', '1233')
-            ->addParam('ts', substr($timestamp, 0, -3));
+
+        $this->addParam('manifest_version_code','2019092901');
+        $this->addParam('_rticket',$timestamp);
+        $this->addParam('app_language','tr');
+        $this->addParam('app_type','normal');
+        $this->addParam('iid',$this->parent->storage->getUser()->getInstallId());
+        $this->addParam('channel','googleplay');
+        $this->addParam('device_type',$this->parent->storage->getUser()->getDeviceType());
+        $this->addParam('language','tr');
+        $this->addParam('locale','tr-TR');
+        $this->addParam('resolution',$this->parent->storage->getUser()->getResolution());
+        $this->addParam('openudid',$this->parent->storage->getUser()->getOpenudid());
+        $this->addParam('update_version_code','2019092901');
+        $this->addParam('ac2','wifi');
+        $this->addParam('sys_region','TR');
+        $this->addParam('os_api','29');
+        $this->addParam('uoo','0');
+        $this->addParam('is_my_cn','0');
+        $this->addParam('timezone_name','Europe/Istanbul');
+        $this->addParam('dpi',$this->parent->storage->getUser()->getDpi());
+        $this->addParam('carrier_region','TR');
+        $this->addParam('ac','wifi');
+        $this->addParam('device_id',$this->parent->storage->getUser()->getDeviceId());
+        $this->addParam('pass-route','1');
+        $this->addParam('mcc_mnc',$this->parent->storage->getUser()->getMccMnc());
+        $this->addParam('os_version','10');
+        $this->addParam('timezone_offset','10800');
+        $this->addParam('version_code','130211');
+        $this->addParam('carrier_region_v2',$this->parent->storage->getUser()->getCarrierRegionV2());
+        $this->addParam('app_name','musical_ly');
+        $this->addParam('ab_version','13.2.11');
+        $this->addParam('version_name','13.2.11');
+        $this->addParam('device_brand',$this->parent->storage->getUser()->getDeviceBrand());
+        $this->addParam('ssmix','a');
+        $this->addParam('pass-region','1');
+        $this->addParam('device_platform','android');
+        $this->addParam('build_number','13.2.11');
+        $this->addParam('region','TR');
+        $this->addParam('aid','1233');
+        $this->addParam('ts',substr($timestamp, 0, -3));
+
     }
 
     public function disableTokens(bool $isDisabled) : Request

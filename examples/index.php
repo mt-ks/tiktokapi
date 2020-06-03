@@ -45,24 +45,15 @@ $deviceInfo = [
     'openudid' => '71c300d58b222214',
     'device_id' => '6735782704719316486',
     'android_id' => '71c300d58b222214',
-    'iid' => '6832794245474256645',
+    'install_id' => '6832794245474256645',
     'useragent' => 'com.zhiliaoapp.musically/2019091803 (Linux; U; Android 10; tr_TR; SM-A505F; Build/QP1A.190711.020; Cronet/58.0.2991.0)'
 ];
 
 try {
     $username = 'buketamkoparancik'.rand(9,999999);
     $t = new \TikTokAPI\TikTok($username, 'qweqwe11', $deviceInfo);
-    $t->setProxy('webgrambx418b:fcf613af997a11ad11d1@ianaliz.com:20685');
+    $t->setProxy('webgrambxf82a:f413c712d12e30a0b413@ianaliz.com:10571');
 
-    $register = $t->registerDevice();
-
-//
-    $t->storage->set('device_type',$register->getDeviceType())
-        ->set('device_brand',$register->getDeviceBrand())
-        ->set('openudid',$register->getOpenUDID())
-        ->set('device_id',$register->getDeviceId())
-        ->set('useragent',$register->getUseragent())
-        ->set('iid',$register->getInstallId());
 
 
     $yr = $t->registerVerifyAge();

@@ -17,7 +17,12 @@ use EJM\MainMapper;
  * @method getOpenudid()
  * @method getDeviceBrand()
  * @method getDeviceType()
- * @method getUserAgent()
+ * @method getUseragent()
+ * @method getCarrierRegionV2()
+ * @method getCarrierRegion()
+ * @method getDpi()
+ * @method getResolution()
+ * @method getMccMnc()
  */
 class RegisterDeviceResponse extends MainMapper
 {
@@ -28,9 +33,14 @@ class RegisterDeviceResponse extends MainMapper
         'device_id_str' => 'string',
         'install_id_str' => 'string',
         'new_user' => 'string',
-        'user_agent' => 'string',
         'openudid' => 'string',
         'device_type' => 'string',
-        'device_brand' => 'string'
+        'device_brand' => 'string',
+        'useragent' => 'string',
+        'resolution' => 'int',
+        'dpi' => 'int',
+        'carrier_region_v2' => 'int',
+        'carrier_region' => 'string',
+        'mcc_mnc' => 'string'
     ];
 }

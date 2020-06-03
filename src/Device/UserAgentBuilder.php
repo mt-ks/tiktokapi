@@ -140,6 +140,16 @@ class UserAgentBuilder
     public static function devices() : array
     {
         return [
+            ["samsung","SM-A810S","1080x2160", "420"],
+            ["samsung","SM-A8000","1080x2160", "420"],
+            ["samsung","SM-A800F","1080x2160", "420"],
+            ["samsung","SM-A800I","1080x2160", "420"],
+            ["samsung","SM-A800J","1080x2160", "420"],
+            ["samsung","SM-A800S","1080x2160", "420"],
+            ["samsung","SM-A800YZ","1080x2160", "420"]
+        ];
+
+        return [
             ["ZTE", "BladeMaxViewLTEUSZ610DL", "1080x2160", "402"],
             ["LG", "X212TALAristo2PlusLTEUS", "720x1280", "294"],
             ["LG", "L413DLPremierProLTE", "720x1280", "277"],

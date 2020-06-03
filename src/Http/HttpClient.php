@@ -37,7 +37,8 @@ class HttpClient
             CURLOPT_SSL_VERIFYHOST  => false,
             CURLOPT_SSL_VERIFYPEER  => false,
             CURLOPT_TIMEOUT         => 10,
-            CURLOPT_ENCODING        => 'gzip, deflate'
+            CURLOPT_ENCODING        => 'gzip, deflate',
+            CURLOPT_USERAGENT       => $this->request->parent->storage->getUser()->getUseragent()
         ];
 
         if ($this->request->parent->getProxy() !== null):
@@ -45,11 +46,14 @@ class HttpClient
         endif;
 
         $this->request->addHeader('Content-Type','application/x-www-form-urlencoded; charset=UTF-8');
+        $this->request->addHeader('sdk-version',1);
+        $this->request->addHeader('Accept-Encoding','gzip, deflate');
 
         if ($this->request->getNeedsCookie() === true):
             $options[CURLOPT_COOKIEFILE]  = $this->request->parent->storage->getCookiePath();
             $options[CURLOPT_COOKIEJAR]   = $this->request->parent->storage->getCookiePath();
         endif;
+
 
 
         if ($this->request->hasPost()):
@@ -59,13 +63,13 @@ class HttpClient
             $options[CURLOPT_POST] = true;
         $options[CURLOPT_POSTFIELDS] = $this->request->getPostPayload();
         endif;
-        $this->request->addHeader('User-Agent', $this->request->parent->storage->getUser()->deviceUseragent());
-
+        $this->request->addHeader('User-Agent', $this->request->parent->storage->getUser()->getUseragent());
 
         if ($this->request->isDisabledTokens() === false):
             $createToken = new CreateToken($this->request->getBaseUrl().$this->request->getEndpoint(), $this->request->getRequestParams(true), $this->request->getRequestPosts(), $this->request->getRequestHeaders(true));
-        $this->request->addHeader('X-Gorgon', $createToken->getXGorgon());
-        $this->request->addHeader('X-Khronos', $createToken->getXKhronos());
+            print_r($createToken);
+            $this->request->addHeader('X-Gorgon', $createToken->getXGorgon());
+            $this->request->addHeader('X-Khronos', $createToken->getXKhronos());
         endif;
 
 
@@ -89,6 +93,8 @@ class HttpClient
         print_r($options);
         $this->requestResponse = $resp;
         $this->requestResponseHeaders = $header;
+
+
     }
 
     /**

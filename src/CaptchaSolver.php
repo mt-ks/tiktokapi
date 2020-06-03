@@ -31,7 +31,7 @@ class CaptchaSolver
      */
     public function solve($id, $url1, $url2, $y)
     {
-        $this->captchaTMP = '';
+        $this->captchaTMP = __DIR__.'/../examples/captchas/';
         $this->id    = $id;
         $this->url1  = $url1;
         $this->url2  = $url2;

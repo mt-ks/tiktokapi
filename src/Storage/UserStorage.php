@@ -5,7 +5,9 @@ namespace TikTokAPI\Storage;
 
 use Exception;
 use RuntimeException;
+use TikTokAPI\Constants;
 use TikTokAPI\Device\Device;
+use TikTokAPI\Models\UserModel;
 
 class UserStorage
 {
@@ -88,13 +90,18 @@ class UserStorage
         return $this->userConfig[$key] ?? $default;
     }
 
+
     /**
      * @return UserModel
-     * @throws Exception
      */
     public function getUser(): UserModel
     {
-        return new UserModel(stream_get_contents($this->getFileContent()));
+        try{
+            return new UserModel((array)json_decode(stream_get_contents($this->getFileContent()), true, 512, JSON_THROW_ON_ERROR));
+        }catch (Exception $e)
+        {
+            return new UserModel([]);
+        }
     }
 
 
@@ -125,13 +132,17 @@ class UserStorage
     {
         return [
             'username'     => $this->username,
-            'cookie'       => '',
             'useragent'    => $this->deviceInfo['useragent'] ?? '',
             'openudid'     => $this->deviceInfo['openudid'] ?? '',
             'device_id'    => $this->deviceInfo['device_id'] ?? '',
-            'iid'          => $this->deviceInfo['iid'] ?? '',
+            'install_id'   => $this->deviceInfo['install_id'] ?? '',
             'device_type'  => $this->deviceInfo['device_type'] ?? '',
             'device_brand' => $this->deviceInfo['device_brand'] ?? '',
+            'dpi'          => $this->deviceInfo['dpi'] ?? '',
+            'resolution'   => $this->deviceInfo['resolution'] ?? Constants::RESOLUTION,
+            'carrier_region_v2' => $this->deviceInfo['carrier_region_v2'] ?? 286,
+            'carrier_region' => $this->deviceInfo['carrier_region'] ?? Constants::REGION,
+            'mcc_mnc' => $this->deviceInfo['carrier_region'] ?? 28601
         ];
     }
 }

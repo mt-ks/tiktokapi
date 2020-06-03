@@ -3,6 +3,7 @@
 
 namespace TikTokAPI\Encryption;
 
+use TikTokAPI\Constants;
 use TikTokAPI\Device\UserAgentBuilder;
 
 class Encryption
@@ -72,26 +73,26 @@ class Encryption
             'magic_tag' => 'ss_app_log',
             'header'    => [
                 'display_name'          => 'TikTok',
-                'update_version_code'   => "2019092901",
-                'manifest_version_code' => "2019092901",
+                'update_version_code'   => Constants::VERSION_CODE,
+                'manifest_version_code' => Constants::VERSION_CODE,
                 'aid'                   => "1233",
                 'channel'               => 'googleplay',
                 'appkey'                => '5559e28267e58eb4c1000012',
                 'package'               => 'com.zhiliaoapp.musically',
-                'app_version'           => '9.9.0',
-                'version_code'          => '130211',
+                'app_version'           => Constants::TIKTOK_VERSION,
+                'version_code'          => Constants::VERSION_CODE,
                 'sdk_version'           => '2.5.5.8',
                 'os'                    => 'Android',
-                'os_version'            => '7.1.2',
-                'os_api'                => '25',
+                'os_version'            => '10',
+                'os_api'                => '29',
                 'device_model'          => $randDevice[1],
                 'device_brand'          => $randDevice[0],
                 'cpu_abi'               => 'arm64-v8a',
                 'release_build'         => 'eaeeb2f_20190929',
                 'density_dpi'           => $randDevice[3],
                 'display_density'       => 'mdpi',
-                'resolution'            => $randDevice[2],
-                'language'              => 'en',
+                'resolution'            => str_replace(["X","x"],"*",$randDevice[2]),
+                'language'              => 'tr',
                 'mc'                    => self::randomMac(),
                 'timezone'              => 0,
                 'access'                => 'wifi',
@@ -102,16 +103,16 @@ class Encryption
                 'openudid'              => self::deviceId(),
                 'clientudid'            => self::generateUUID(),
                 'sim_serial_number'     => [],
-                'tz_name'               => 'America/New_York',
-                'tz_offset'             => 0,
-                'sim_region'            => 'us'
+                'tz_name'               => 'Europe/Istanbul',
+                'tz_offset'             => 10800,
+                'sim_region'            => 'tr'
             ],
             "_gen_time" => time()
         ];
         return [
           'encoded' => json_encode($appData, JSON_THROW_ON_ERROR),
           'data'    => $appData,
-          'ua'      => "com.zhiliaoapp.musically/2019091803 (Linux; U; Android 7.1.2 en; $randDevice[1]; Build/$randDevice[1]; Cronet/58.0.2991.0)",
+          'ua'      => "com.zhiliaoapp.musically/2019092901 (Linux; U; Android 10; tr_TR; $randDevice[1]; Build/QP1A.190711.020; Cronet/58.0.2991.0)",
           'carrier' => $randCarrier
         ];
     }
