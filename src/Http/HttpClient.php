@@ -30,47 +30,36 @@ class HttpClient
         $this->request = $request;
         $curl = curl_init();
         $options = [
-            CURLOPT_URL => $this->request->getBaseUrl().$this->request->getEndpoint().$this->request->getRequestParams(),
-            CURLOPT_RETURNTRANSFER  => true,
-            CURLOPT_FOLLOWLOCATION  => true,
-            CURLOPT_HEADER          => true,
-            CURLOPT_SSL_VERIFYHOST  => false,
-            CURLOPT_SSL_VERIFYPEER  => false,
-            CURLOPT_TIMEOUT         => 10,
-            CURLOPT_ENCODING        => 'gzip, deflate',
-            CURLOPT_USERAGENT       => $this->request->parent->storage->getUser()->getUseragent()
+            CURLOPT_URL => $this->request->getBaseUrl() . $this->request->getEndpoint() . $this->request->getRequestParams(),
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HEADER => true,
+            CURLOPT_SSL_VERIFYHOST => false,
+            CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_TIMEOUT => 10,
+            CURLOPT_ENCODING => 'gzip, deflate',
+            CURLOPT_USERAGENT => $this->request->parent->storage->getUser()->getUseragent()
         ];
 
         if ($this->request->parent->getProxy() !== null):
             $options[CURLOPT_PROXY] = $this->request->parent->getProxy();
         endif;
 
-        $this->request->addHeader('Content-Type','application/x-www-form-urlencoded; charset=UTF-8');
-        $this->request->addHeader('sdk-version',1);
-        $this->request->addHeader('Accept-Encoding','gzip, deflate');
+        $this->request->addHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
 
         if ($this->request->getNeedsCookie() === true):
-            $options[CURLOPT_COOKIEFILE]  = $this->request->parent->storage->getCookiePath();
-            $options[CURLOPT_COOKIEJAR]   = $this->request->parent->storage->getCookiePath();
+            $options[CURLOPT_COOKIEFILE] = $this->request->parent->storage->getCookiePath();
+            $options[CURLOPT_COOKIEJAR] = $this->request->parent->storage->getCookiePath();
         endif;
-
-
 
         if ($this->request->hasPost()):
             $options[CURLOPT_POST] = true;
-        $options[CURLOPT_POSTFIELDS] = $this->request->getRequestPosts();
-        $this->request->addHeader('X-SS-STUB', strtoupper(md5($this->request->getRequestPosts()))); elseif ($this->request->getPostPayload() !== null):
+            $options[CURLOPT_POSTFIELDS] = $this->request->getRequestPosts();
+        elseif ($this->request->getPostPayload() !== null):
             $options[CURLOPT_POST] = true;
-        $options[CURLOPT_POSTFIELDS] = $this->request->getPostPayload();
+            $options[CURLOPT_POSTFIELDS] = $this->request->getPostPayload();
         endif;
         $this->request->addHeader('User-Agent', $this->request->parent->storage->getUser()->getUseragent());
-
-        if ($this->request->isDisabledTokens() === false):
-            $createToken = new CreateToken($this->request->getBaseUrl().$this->request->getEndpoint(), $this->request->getRequestParams(true), $this->request->getRequestPosts(), $this->request->getRequestHeaders(true));
-            print_r($createToken);
-            $this->request->addHeader('X-Gorgon', $createToken->getXGorgon());
-            $this->request->addHeader('X-Khronos', $createToken->getXKhronos());
-        endif;
 
 
 
@@ -81,8 +70,9 @@ class HttpClient
         if ($this->request->hasCurlOptions()):
             foreach ($this->request->getRequestCurl() as $key => $value):
                 $options[$key] = $value;
-        endforeach;
+            endforeach;
         endif;
+
         curl_setopt_array($curl, $options);
         $resp = curl_exec($curl);
         $header_len = curl_getinfo($curl, CURLINFO_HEADER_SIZE);
@@ -90,7 +80,7 @@ class HttpClient
         $header = $this->getHeadersFromResponse($header);
         $resp = (substr($resp, $header_len));
         curl_close($curl);
-        print_r($options);
+//        print_r($options);
         $this->requestResponse = $resp;
         $this->requestResponseHeaders = $header;
 

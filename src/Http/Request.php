@@ -122,7 +122,7 @@ class Request
     public function getRequestParams($withQM = true)
     {
         if ($this->disableDefaultParams !== true):
-            $this->initDefaultParams();
+            $this->init99Params();
         endif;
         if ($this->hasParams()) {
             return ($withQM) ? '?' . http_build_query($this->_param) : http_build_query($this->_param);
@@ -150,60 +150,6 @@ class Request
 
 
 
-
-    public function getDefaultParams() : void
-    {
-        $params =  [
-            'filter_warn'           => 0,
-            'bid_ad_params'         => '',
-            'android_id'            => $this->parent->storage->getUser()->getOpenudid(),
-            'ad_personality_mode'   => '1',
-            'ts'                    => time(),
-            'js_sdk_version'        => '',
-            'app_type'              => 'normal',
-            'os_api'                => '22',
-            'device_type'           => $this->parent->storage->getUser()->getDeviceType(),
-            'ssmix'                 => 'a',
-            'manifest_version_code' => '2019011531',
-            'dpi'                   => '320',
-            'carrier_region'        => 'US',
-            'carrier_region_v2'     => '286',
-            'app_name'              => 'musical_ly',
-            'version_name'          => '9.9.0',
-            'timezone_offset'       => '7200',
-            'pass-route'            => '1',
-            'pass-region'           => '1',
-            'is_my_cn'              => 0,
-            'fp'                    => '',
-            'ac'                    => 'wifi',
-            'update_version_code'   => '2019011531',
-            'channel'               => 'googleplay',
-            '_rticket'              => time(),
-            'device_platform'       => 'android',
-            'iid'                   => $this->parent->storage->getUser()->getInstallId(),
-            'build_number'          => '9.9.0',
-            'version_code'          => '990',
-            'timezone_name'         => 'Europe/Istanbul',
-            'account_region'        => 'V',
-            'openudid'              => $this->parent->storage->getUser()->getOpenudid(),
-            'device_id'             => $this->parent->storage->getUser()->getDeviceId(),
-            'sys_region'            => 'US',
-            'app_language'          => 'us',
-            'resolution'            => '720*1280',
-            'os_version'            => '7.1.2',
-            'device_brand'          => strtolower($this->parent->storage->getUser()->getDeviceBrand()),
-            'language'              => 'us',
-            'aid'                   => '1233',
-            'mcc_mnc'               => '28601',
-            'as'                    => 'a1a559fdcf574eae756577',
-            'cp'                    => '9d71ee5bf853d9eae1acOg',
-            'mas'                   => '0166adcaa7a52a86ad9701e5b495f24a15ececac6caceca686a62c'
-        ];
-        foreach ($params as $key => $value)
-        {
-            $this->addParam($key,$value);
-        }
-    }
     public function initDefaultParams(): void
     {
         $timestamp = round(microtime(true) * 1000);
@@ -248,6 +194,60 @@ class Request
         $this->addParam('aid','1233');
         $this->addParam('ts',substr($timestamp, 0, -3));
 
+    }
+
+
+    public function init99Params() : void
+    {
+        $params = [
+            'filter_warn'           => 0,
+            'bid_ad_params'         => '',
+            'android_id'            => $this->parent->storage->getUser()->getOpenudid(),
+            'ad_personality_mode'   => '1',
+            'ts'                    => time(),
+            'js_sdk_version'        => '',
+            'app_type'              => 'normal',
+            'os_api'                => '22',
+            'device_type'           => $this->parent->storage->getUser()->getDeviceType(),
+            'ssmix'                 => 'a',
+            'manifest_version_code' => '2019011531',
+            'dpi'                   => '320',
+            'carrier_region'        => 'US',
+            'carrier_region_v2'     => '286',
+            'app_name'              => 'musical_ly',
+            'version_name'          => '9.9.0',
+            'timezone_offset'       => '7200',
+            'pass-route'            => '1',
+            'pass-region'           => '1',
+            'is_my_cn'              => 0,
+            'fp'                    => '',
+            'ac'                    => 'wifi',
+            'update_version_code'   => '2019011531',
+            'channel'               => 'googleplay',
+            '_rticket'              => time(),
+            'device_platform'       => 'android',
+            'iid'                   => $this->parent->storage->getUser()->getInstallId(),
+            'build_number'          => '9.9.0',
+            'version_code'          => '990',
+            'timezone_name'         => 'Europe/Istanbul',
+            'account_region'        => 'V',
+            'openudid'              => $this->parent->storage->getUser()->getOpenudid(),
+            'device_id'             => $this->parent->storage->getUser()->getDeviceId(),
+            'sys_region'            => 'US',
+            'app_language'          => 'us',
+            'resolution'            => $this->parent->storage->getUser()->getResolution(),
+            'os_version'            => '5.1.1',
+            'device_brand'          => strtolower($this->parent->storage->getUser()->getDeviceBrand()),
+            'language'              => 'us',
+            'aid'                   => '1233',
+            'mcc_mnc'               => '28601',
+            'as'                    => 'a155ba9d13544e70052822',
+            'cp'                    => 'ae4cea5f3959d000e1Ws_a',
+            'mas'                   => '017f2f6f68d4b2af307160a27fb3cbdc4f4c4c1c4cac0c0ceca62c'
+        ];
+        foreach ($params as $key => $value):
+            $this->addParam($key,$value);
+        endforeach;
     }
 
     public function disableTokens(bool $isDisabled) : Request

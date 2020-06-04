@@ -7,6 +7,9 @@ use ImagickException;
 use JsonException;
 use TikTokAPI\Encryption\Encryption;
 use TikTokAPI\Http\Request;
+use TikTokAPI\Models\Captcha\CaptchaResponse;
+use TikTokAPI\Models\Captcha\SolveResponse;
+use TikTokAPI\Models\LoginResponse;
 use TikTokAPI\Models\RegisterDeviceModel;
 use TikTokAPI\Models\RegisterDeviceResponse;
 use TikTokAPI\Storage\UserStorage;
@@ -102,22 +105,21 @@ class TikTok
     }
 
     /**
+     * @param bool $needsCookie
      * @return mixed
-     * @throws Exception
      */
-    public function login()
+    public function login($needsCookie = true)
     {
-        return $this->request('passport/user/login/')
+        $response = $this->request('passport/user/login/')
+            ->setNeedsCookie($needsCookie)
             ->addPost('mix_mode', 1)
             ->addPost('username', Encryption::xorEncrypt($this->username))
-            ->addPost('email','')
-            ->addPost('mobile', '')
-            ->addPost('account','')
             ->addPost('password', Encryption::xorEncrypt($this->password))
-            ->addPost('multi_login', 0)
-            ->addPost('captcha', '')
+            ->addPost('multi_login', 1)
+            ->addPost('account_sdk_source', 'app')
             ->execute()
-            ->getDecodedResponse(true);
+            ->getDecodedResponse();
+        return new LoginResponse($response);
     }
 
 
@@ -260,7 +262,7 @@ class TikTok
      */
     public function getCaptcha($node = 1105)
     {
-        return $this->request('get')
+        $response = $this->request('get')
             ->setBaseUrl(1)
             ->setNeedsCookie(false)
             ->addParam('aid', 1233)
@@ -277,6 +279,7 @@ class TikTok
             ->addHeader('User-Agent', 'Mozilla/5.0 (Linux; Android 5.1.1; SM-J200F Build/LMY47X; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/80.0.3987.117 Mobile Safari/537.36')
             ->execute()
             ->getDecodedResponse();
+        return new CaptchaResponse($response);
     }
 
 
@@ -292,7 +295,7 @@ class TikTok
     public function solveCaptcha($id, $url1, $url2, $tip_y)
     {
         $solver = (new CaptchaSolver())->solve($id, $url1, $url2, $tip_y);
-        return $this->request('verify')
+        $response =  $this->request('verify')
             ->setBaseUrl(1)
             ->setNeedsCookie(false)
             ->addParam('aid', 1233)
@@ -306,9 +309,11 @@ class TikTok
             ->addParam('os', 0)
             ->addHeader('Referer',$this->getPuzzleAddress())
             ->disableTokens(true)
+            ->setDisableDefaultParams(true)
             ->setPostPayload($solver)
             ->execute()
             ->getDecodedResponse();
+        return new SolveResponse($response);
     }
 
 
