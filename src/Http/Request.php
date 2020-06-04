@@ -123,6 +123,7 @@ class Request
     {
         if ($this->disableDefaultParams !== true):
             $this->init99Params();
+//            $this->initDefaultParams();
         endif;
         if ($this->hasParams()) {
             return ($withQM) ? '?' . http_build_query($this->_param) : http_build_query($this->_param);
@@ -241,9 +242,9 @@ class Request
             'language'              => 'us',
             'aid'                   => '1233',
             'mcc_mnc'               => '28601',
-            'as'                    => 'a155ba9d13544e70052822',
-            'cp'                    => 'ae4cea5f3959d000e1Ws_a',
-            'mas'                   => '017f2f6f68d4b2af307160a27fb3cbdc4f4c4c1c4cac0c0ceca62c'
+            'as'                    => 'a135251de4387eb1892833',
+            'cp'                    => '5880e05c499fd518e1OsWa',
+            'mas'                   => md5(time())
         ];
         foreach ($params as $key => $value):
             $this->addParam($key,$value);

@@ -9,6 +9,8 @@ use TikTokAPI\Encryption\Encryption;
 use TikTokAPI\Http\Request;
 use TikTokAPI\Models\Captcha\CaptchaResponse;
 use TikTokAPI\Models\Captcha\SolveResponse;
+use TikTokAPI\Models\FollowResponse;
+use TikTokAPI\Models\LikeResponse;
 use TikTokAPI\Models\LoginResponse;
 use TikTokAPI\Models\RegisterDeviceModel;
 use TikTokAPI\Models\RegisterDeviceResponse;
@@ -132,7 +134,7 @@ class TikTok
      */
     public function follow($secUserId, $channelId = 3)
     {
-        return $this->request('aweme/v1/commit/follow/user/')
+        $response = $this->request('aweme/v1/commit/follow/user/')
              ->setBaseUrl(3)
              ->addParam('sec_user_id', $secUserId)
              ->addParam('from', 0)
@@ -141,6 +143,7 @@ class TikTok
              ->addParam('channel_id', $channelId)
              ->execute()
              ->getDecodedResponse();
+        return new FollowResponse($response);
     }
 
     /**
@@ -149,44 +152,14 @@ class TikTok
      */
     public function like($mediaId)
     {
-        return $this->request('aweme/v1/commit/item/digg/')
+        $response = $this->request('aweme/v1/commit/item/digg/')
             ->addParam('aweme_id', $mediaId)
             ->addParam('type', 1)
             ->execute()
             ->getDecodedResponse();
+        return new LikeResponse($response);
     }
 
-    public function report($action,$verifyTime)
-    {
-        $log = [
-            'aid' => 1233,
-            'lang' => 'tr',
-            'app_name' => 'musical_ly',
-            'iid' => $this->storage->getUser()->getInstallId(),
-            'vc' => Constants::VERSION_CODE,
-            'did' => $this->storage->getUser()->getDeviceId(),
-            'ch' => Constants::CHANNEL,
-            'os' => '0',
-            'challenge_code' => 1105,
-            'time' => time(),
-            'verify_time' => $verifyTime,
-            'action' => $action,
-            'detailinfos' => [
-                'msg' => '滑动开始：可滑动'
-            ],
-            'mode' => 'slide'
-        ];
-        return $this->request('report')
-            ->setBaseUrl(1)
-            ->setPostPayload(json_encode($log, JSON_THROW_ON_ERROR))
-            ->addHeader('Cookie','store-idc=maliva; store-country-code=tr; sec_sessionid=')
-            ->addHeader('Referer',$this->getPuzzleAddress())
-            ->setDisableDefaultParams(true)
-            ->disableTokens(true)
-            ->execute()
-            ->getResponse();
-
-    }
 
     /**
      * @return mixed|string
@@ -322,7 +295,7 @@ class TikTok
      * @return mixed
      * @throws JsonException
      */
-    public function registerDevice($needCookie = false)
+    public function registerDevice($needCookie = true)
     {
         $binary = Encryption::deviceRegisterData();
         $register = $this->request('service/2/device_register/')

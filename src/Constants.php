@@ -14,9 +14,9 @@ class Constants
 
     // App related
     public const APP_NAME = 'musical_ly';
-    public const TIKTOK_VERSION = '13.2.11';
-    public const VERSION_CODE = '2019092901';
-    public const BUILD_VERSION = '130211';
+    public const TIKTOK_VERSION = '9.9.0';
+    public const VERSION_CODE = '2019011531';
+    public const BUILD_VERSION = '990';
     public const SDK_VERSION = '380';
     public const APP_TYPE = 'normal';
 
