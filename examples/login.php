@@ -30,7 +30,7 @@ try{
 //            $captcha->getData()->getQuestion()->getUrl1(),
 //            $captcha->getData()->getQuestion()->getUrl2(),
 //            $captcha->getData()->getQuestion()->getTipY());
-
+//
 //        if ($solve->getMsgType() === 'success')
 //        {
 //            $login = $t->login();
@@ -46,8 +46,8 @@ try{
 
 
 //        $t->changeDeviceInfo();
-//        $like = $t->like('6830149085920627974');
-//        print_r($like->asArray());
+        $like = $t->like('6832367493529603334');
+        print_r($like->asArray());
 
 }catch (Exception $e)
 {
