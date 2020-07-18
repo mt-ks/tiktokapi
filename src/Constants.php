@@ -9,7 +9,8 @@ class Constants
         'https://api2.musical.ly/',
         'https://verification-va.musical.ly/',
         'https://applog.musical.ly/',
-        'https://api2-19-h2.musical.ly/'
+        'https://api2-19-h2.musical.ly/',
+        'https://api19-normal-c-useast1a.tiktokv.com/'
     ];
 
     // App related
