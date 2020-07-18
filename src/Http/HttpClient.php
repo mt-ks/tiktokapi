@@ -62,11 +62,11 @@ class HttpClient
         endif;
         $this->request->addHeader('User-Agent', $this->request->parent->storage->getUser()->getUseragent());
 
-        if ($this->request->isDisabledTokens() === false):
-            $token = new CreateToken($this->request->getBaseUrl().$this->request->getEndpoint(),$this->request->getRequestParams(true),$this->request->getRequestPosts());
-            $this->request->addHeader('X-Gorgon',$token->getXGorgon());
-            $this->request->addHeader('X-Khronos',$token->getXKhronos());
-        endif;
+//        if ($this->request->isDisabledTokens() === false):
+//            $token = new CreateToken($this->request->getBaseUrl().$this->request->getEndpoint(),$this->request->getRequestParams(true),$this->request->getRequestPosts());
+//            $this->request->addHeader('X-Gorgon',$token->getXGorgon());
+//            $this->request->addHeader('X-Khronos',$token->getXKhronos());
+//        endif;
 
         if ($this->request->hasHeaders()):
             $options[CURLOPT_HTTPHEADER] = $this->request->getRequestHeaders();

@@ -18,9 +18,8 @@ try{
     $proxy    = 'webgrambxf82a:f413c712d12e30a0b413@ianaliz.com:10571';
 
 
-    $t = new TikTok($username, $password,$deviceInfo);
-    $t->setProxy($proxy);
-//
+    $t = new TikTok($username, $password);
+
 //    $login = $t->login();
 //    print_r($login->asArray());
 //    if ($login->getMessage() === 'error' && $login->getData()->getErrorCode() === 1105)
@@ -46,7 +45,7 @@ try{
 
 
 //        $t->changeDeviceInfo();
-        $like = $t->like('6832367493529603334');
+        $like = $t->like('6819630756407643397');
         print_r($like->asArray());
 
 }catch (Exception $e)

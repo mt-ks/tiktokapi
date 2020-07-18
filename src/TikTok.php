@@ -74,7 +74,7 @@ class TikTok
      */
     public function changeDeviceInfo(): void
     {
-        $registerNewDevice = $this->registerDevice();
+        $registerNewDevice = $this->registerDevice(false);
         $this->storage->set('device_type', $registerNewDevice->getDeviceType())
             ->set('device_brand', $registerNewDevice->getDeviceBrand())
             ->set('openudid', $registerNewDevice->getOpenudid())

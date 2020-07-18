@@ -30,6 +30,7 @@ class CreateToken
         $o = [
             CURLOPT_URL => self::SERVER_ADDRESS,
             CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_TIMEOUT => 5,
             CURLOPT_POSTFIELDS => json_encode($data, JSON_THROW_ON_ERROR),
             CURLOPT_HTTPHEADER => [
                 'content-type: application/json'

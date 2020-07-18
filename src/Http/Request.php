@@ -122,8 +122,8 @@ class Request
     public function getRequestParams($withQM = true)
     {
         if ($this->disableDefaultParams !== true):
-            $this->init99Params();
-//            $this->initDefaultParams();
+//            $this->init99Params();
+            $this->initDefaultParams();
         endif;
         if ($this->hasParams()) {
             return ($withQM) ? '?' . http_build_query($this->_param) : http_build_query($this->_param);
@@ -155,7 +155,7 @@ class Request
     {
         $timestamp = round(microtime(true) * 1000);
 
-        $this->addParam('manifest_version_code','2019092901');
+        $this->addParam('manifest_version_code',Constants::VERSION_CODE);
         $this->addParam('_rticket',$timestamp);
         $this->addParam('app_language','tr');
         $this->addParam('app_type','normal');
@@ -166,7 +166,7 @@ class Request
         $this->addParam('locale','tr-TR');
         $this->addParam('resolution',$this->parent->storage->getUser()->getResolution());
         $this->addParam('openudid',$this->parent->storage->getUser()->getOpenudid());
-        $this->addParam('update_version_code','2019092901');
+        $this->addParam('update_version_code',Constants::UPDATE_VERSION_CODE);
         $this->addParam('ac2','wifi');
         $this->addParam('sys_region','TR');
         $this->addParam('os_api','29');
@@ -181,16 +181,16 @@ class Request
         $this->addParam('mcc_mnc',$this->parent->storage->getUser()->getMccMnc());
         $this->addParam('os_version','10');
         $this->addParam('timezone_offset','10800');
-        $this->addParam('version_code','130211');
+        $this->addParam('version_code',Constants::BUILD_VERSION);
         $this->addParam('carrier_region_v2',$this->parent->storage->getUser()->getCarrierRegionV2());
         $this->addParam('app_name','musical_ly');
-        $this->addParam('ab_version','13.2.11');
-        $this->addParam('version_name','13.2.11');
+        $this->addParam('ab_version',Constants::TIKTOK_VERSION);
+        $this->addParam('version_name',Constants::TIKTOK_VERSION);
         $this->addParam('device_brand',$this->parent->storage->getUser()->getDeviceBrand());
         $this->addParam('ssmix','a');
         $this->addParam('pass-region','1');
         $this->addParam('device_platform','android');
-        $this->addParam('build_number','13.2.11');
+        $this->addParam('build_number',Constants::TIKTOK_VERSION);
         $this->addParam('region','TR');
         $this->addParam('aid','1233');
         $this->addParam('ts',substr($timestamp, 0, -3));

@@ -65,6 +65,7 @@ class Encryption
 
     public static function deviceRegisterData(): array
     {
+        $os_version = rand(7,10);
         $device   = UserAgentBuilder::devices();
         $randDevice = $device[array_rand($device)];
         $carriers = UserAgentBuilder::carriers();
@@ -73,14 +74,14 @@ class Encryption
             'magic_tag' => 'ss_app_log',
             'header'    => [
                 'display_name'          => 'TikTok',
-                'update_version_code'   => Constants::VERSION_CODE,
-                'manifest_version_code' => Constants::VERSION_CODE,
+                'update_version_code'   => '2019092901',
+                'manifest_version_code' => '2019092901',
                 'aid'                   => "1233",
                 'channel'               => 'googleplay',
                 'appkey'                => '5559e28267e58eb4c1000012',
                 'package'               => 'com.zhiliaoapp.musically',
-                'app_version'           => Constants::TIKTOK_VERSION,
-                'version_code'          => Constants::VERSION_CODE,
+                'app_version'           => '13.2.11',
+                'version_code'          => '2019092901',
                 'sdk_version'           => '2.5.5.8',
                 'os'                    => 'Android',
                 'os_version'            => '10',
@@ -112,7 +113,7 @@ class Encryption
         return [
           'encoded' => json_encode($appData, JSON_THROW_ON_ERROR),
           'data'    => $appData,
-          'ua'      => "com.zhiliaoapp.musically/2019092901 (Linux; U; Android 10; tr_TR; $randDevice[1]; Build/QP1A.190711.020; Cronet/58.0.2991.0)",
+          'ua'      => "com.zhiliaoapp.musically/2019092901 (Linux; U; Android $os_version; tr_TR; $randDevice[1]; Build/QP1A.190711.020; Cronet/58.0.2991.0)",
           'carrier' => $randCarrier
         ];
     }
